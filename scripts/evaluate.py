@@ -52,6 +52,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--base-url", default=DEFAULT_BASE_URL)
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--name", default=None, help="nom du dossier de résultats")
+    p.add_argument("--resume", action="store_true",
+                   help="reprendre une campagne interrompue (même --name) sans refaire les appels déjà faits")
     return p.parse_args()
 
 
@@ -78,10 +80,20 @@ def main() -> None:
     config = {**vars(args), "relation_codes": codes, "doc_ids": [d["id"] for d in docs]}
     (out_dir / "config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
 
+    pred_path = out_dir / "predictions.jsonl"
+    cache: dict[tuple, dict] = {}
+    if args.resume and pred_path.exists():
+        for line in pred_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                if not rec.get("failed"):  # les appels en échec sont retentés
+                    cache[(rec["doc_id"], rec["strategy"], rec["temperature"], rec["seed"])] = rec
+        print(f"Reprise : {len(cache)} extraction(s) déjà faites.")
+
     runs: dict[tuple[str, float, int], dict] = {}
     total = len(args.strategies) * len(args.temperatures) * len(args.seeds) * len(docs)
-    done, t0 = 0, time.time()
-    with (out_dir / "predictions.jsonl").open("w", encoding="utf-8") as fout:
+    done, n_failed, t0 = 0, 0, time.time()
+    with pred_path.open("w", encoding="utf-8") as fout:
         for strategy in args.strategies:
             for temp in args.temperatures:
                 for seed in args.seeds:
@@ -90,10 +102,21 @@ def main() -> None:
                         max_tokens=args.max_tokens, json_mode=not args.no_json_mode)
                     rows_valid, rows_raw = [], []
                     for doc in docs:
+                        key = (doc["id"], strategy, temp, seed)
+                        if key in cache:
+                            rec = cache[key]
+                            rows_valid.append(rec["score"])
+                            rows_raw.append(rec["score_raw"])
+                            fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                            done += 1
+                            continue
                         text = doc_text(doc)
+                        failed = False
                         try:
                             res = run_extraction(client, text, strategy, params, codes, args.n_shots)
                         except Exception as exc:  # une erreur ne doit pas arrêter toute la campagne
+                            failed = True
+                            n_failed += 1
                             res = {"relations": [], "rejected": [], "json_valid": False,
                                    "schema_valid": False, "latency_s": 0.0, "errors": [str(exc)],
                                    "calls": []}
@@ -105,10 +128,12 @@ def main() -> None:
                         rows_raw.append(rr)
                         fout.write(json.dumps({
                             "doc_id": doc["id"], "strategy": strategy, "temperature": temp,
-                            "seed": seed, "score": rv, "relations": res["relations"],
+                            "seed": seed, "score": rv, "score_raw": rr, "failed": failed,
+                            "relations": res["relations"],
                             "rejected": res["rejected"], "errors": res["errors"],
                             "outputs": [c["output"] for c in res["calls"]],
                         }, ensure_ascii=False) + "\n")
+                        fout.flush()
                         done += 1
                         eta = (time.time() - t0) / done * (total - done)
                         print(f"\r[{done}/{total}] {strategy} T={temp} seed={seed} "
@@ -116,6 +141,9 @@ def main() -> None:
                     runs[(strategy, temp, seed)] = {"validated": aggregate(rows_valid),
                                                     "raw": aggregate(rows_raw)}
     print()
+    if n_failed:
+        print(f"ATTENTION : {n_failed} appel(s) en échec (serveur LLM ?), comptés comme sorties "
+              f"invalides. Relancez avec --resume --name {name} pour les retenter.")
 
     summary = []
     for strategy in args.strategies:

@@ -65,10 +65,31 @@ def _recover_json(raw: str) -> Any:
         if ch in "{[":
             try:
                 obj, _ = decoder.raw_decode(cleaned[i:])
-                return obj
             except json.JSONDecodeError:
                 continue
+            # Un sous-objet isolé (une seule relation) n'est pas la réponse :
+            # on laisse alors _salvage_objects récupérer toutes les relations.
+            if isinstance(obj, list) or (isinstance(obj, dict) and {"relations", "triples"} & obj.keys()):
+                return obj
     raise ValueError("aucun JSON récupérable")
+
+
+def _salvage_objects(raw: str) -> list[dict]:
+    """Récupère les objets {...} complets d'une sortie tronquée.
+
+    Cas fréquent avec un petit modèle : il boucle jusqu'à la limite de tokens
+    et le JSON final n'est jamais fermé ; les relations déjà écrites restent
+    exploitables.
+    """
+    objs = []
+    for m in re.finditer(r"\{[^{}]*\}", raw):
+        try:
+            obj = json.loads(m.group(0))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            objs.append(obj)
+    return objs
 
 
 def _pick(item: dict, field: str) -> str | None:
@@ -94,7 +115,12 @@ def parse_output(raw: str) -> dict:
             report["json_recovered"] = True
             report["errors"].append("JSON récupéré après nettoyage")
         except ValueError:
-            return report
+            salvaged = _salvage_objects(raw)
+            if not salvaged:
+                return report
+            data = {"relations": salvaged}
+            report["json_recovered"] = True
+            report["errors"].append(f"JSON tronqué : {len(salvaged)} objet(s) complet(s) récupéré(s)")
 
     try:
         ExtractionOutput.model_validate(data)
