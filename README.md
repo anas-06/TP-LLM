@@ -94,7 +94,9 @@ Les stratégies sont **cumulatives**, pour isoler l'effet de chaque ajout :
    désactivable pour mesurer son effet.
 2. **Validation côté code** (`backend/validation.py`) :
    - `json_valid` : `json.loads` réussit sur la sortie brute. Sinon, on tente une récupération
-     (blocs de code, texte autour du JSON) qui est signalée ;
+     (blocs de code, texte autour du JSON) qui est signalée. Si la sortie a été **coupée**
+     par la limite de tokens (fréquent quand un petit modèle boucle), les relations déjà
+     complètes sont conservées ;
    - `schema_valid` : la sortie respecte `{"relations": [{"subject", "relation", "object"}]}`
      (modèle Pydantic) ;
    - pour chaque relation : normalisation du libellé, **relation dans le schéma**,
@@ -137,6 +139,10 @@ python -m scripts.evaluate --n-docs 30 --strategies few_shot --no-json-mode --na
 # Documents plus courts (plus faciles pour un 1B) : 4 premières phrases
 python -m scripts.evaluate --n-docs 30 --max-sents 4 --name short
 ```
+
+Une campagne interrompue (Ctrl+C, serveur arrêté) se reprend sans refaire les appels
+déjà faits : relancez la même commande en ajoutant `--resume`. Les appels en échec
+sont alors retentés.
 
 Chaque campagne produit `results/<nom>/summary.md` (tableau prêt à copier dans le
 compte rendu), `summary.json`, `config.json` et `predictions.jsonl` (sorties brutes et

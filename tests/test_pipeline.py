@@ -55,6 +55,11 @@ def test_parse_valid_and_recovered():
     assert not noisy["schema_valid"]  # clés head/tail hors schéma...
     assert noisy["items"] == [{"subject": "A", "relation": "r", "object": "B"}]  # ...mais récupérées
 
+    truncated = parse_output('{"relations": [{"subject": "A", "relation": "r", "object": "B"}, '
+                             '{"subject": "C", "relation": "r", "object": "D"}, {"subject": "E", "rel')
+    assert not truncated["json_valid"] and truncated["json_recovered"]
+    assert [i["subject"] for i in truncated["items"]] == ["A", "C"]
+
     bad = parse_output('{"relations": [')
     assert not bad["json_recovered"] and bad["items"] == []
 
