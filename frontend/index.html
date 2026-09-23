@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Extraction de relations</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>Extraction d'informations avec un petit LLM</h1>
+  <span id="health" class="badge">LLM : …</span>
+</header>
+
+<main>
+  <section class="panel" id="input-panel">
+    <h2>Texte</h2>
+    <label>Exemple du jeu d'évaluation (Re-DocRED, split test)
+      <select id="example">
+        <option value="">— Texte libre —</option>
+      </select>
+    </label>
+    <textarea id="text" rows="10">Alice Martin studied at Stanford University. After graduating, she joined Google in 2018.</textarea>
+
+    <h2>Paramètres</h2>
+    <div class="grid">
+      <label>Stratégie
+        <select id="strategy"></select>
+      </label>
+      <label>Relations
+        <select id="relations">
+          <option value="core">core (25 relations)</option>
+          <option value="all">toutes (96 relations)</option>
+        </select>
+      </label>
+      <label>Température : <output id="temperature-out">0</output>
+        <input id="temperature" type="range" min="0" max="1.5" step="0.1" value="0">
+      </label>
+      <label>Seed <input id="seed" type="number" value="42"></label>
+      <label>top_p <input id="top_p" type="number" min="0.05" max="1" step="0.05" value="0.9"></label>
+      <label>top_k <input id="top_k" type="number" min="0" value="40"></label>
+      <label>max tokens <input id="max_tokens" type="number" min="16" max="4096" value="1024"></label>
+      <label>Exemples few-shot <input id="n_shots" type="number" min="0" max="8" value="3"></label>
+      <label>Phrases max (exemple) <input id="max_sents" type="number" min="1" placeholder="toutes"></label>
+    </div>
+    <label class="check"><input id="json_mode" type="checkbox" checked> Forcer la sortie JSON (format serveur)</label>
+    <label class="check"><input id="drop_invalid" type="checkbox" checked> Rejeter les relations non ancrées dans le texte / hors schéma</label>
+    <p id="strategy-desc" class="muted"></p>
+
+    <div class="actions">
+      <button id="run" class="primary">Extraire</button>
+      <button id="cmp-strat">Comparer les stratégies</button>
+      <button id="cmp-temp">Comparer les températures</button>
+    </div>
+  </section>
+
+  <section class="panel" id="output-panel">
+    <h2>Résultat</h2>
+    <div id="status" class="muted">Lancez une extraction.</div>
+    <div id="result"></div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
