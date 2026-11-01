@@ -102,6 +102,17 @@ def test_guardrails_invalid_action_and_answer_without_evidence(monkeypatch):
     assert path[:2] == ["agent", "tools"]
 
 
+def test_empty_action_reads_case_cited_by_number(monkeypatch):
+    """Cas observé pendant la démo : action vide après la recherche -> on lit l'affaire citée."""
+    fake = FakeLLM(plan=[{"action": "search_cases", "args": {"query": CASE_NUM}}, {}, {"action": "answer"}],
+                   answer=[{"answer": "Rejet du pourvoi [C5].", "citations": ["C5"], "found": True}],
+                   judge=[{"supported": True}])
+    final, events, path = run_agent(monkeypatch, fake, QUESTION, llm_check=False)
+    second = [e for e in events if e["type"] == "DECISION"][1]
+    assert second["data"]["action"] == "read_case"
+    assert path[:4] == ["agent", "tools", "agent", "tools"]
+
+
 def test_verifier_failure_loops_then_stops_at_limit(monkeypatch):
     fake = FakeLLM(
         plan=[{"action": "search_cases", "args": {"query": "bail rural congé"}},

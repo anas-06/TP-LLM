@@ -2,7 +2,11 @@
 % Compilation : pdflatex rapport.tex (deux fois), ou xelatex, ou Overleaf (dossier docs/rapport complet).
 \documentclass[11pt,a4paper]{article}
 
-\newcommand{\auteur}{Anas El Alaoui} % <-- à vérifier
+\newcommand{\auteur}{Anas EL ALAOUI}
+\newcommand{\binome}{Assala AMRANI}
+\newcommand{\encadrant}{M. Salah BOUCHAMA}
+\newcommand{\module}{IA générative --- Agents et RAG}
+\newcommand{\daterendu}{2 Novembre 2026}
 \newcommand{\cours}{IA générative --- Séance 3 : Agents}
 
 \usepackage{iftex}
@@ -28,6 +32,7 @@
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds,calc}
 \usepackage{enumitem}
 \usepackage{caption}
+\usepackage{float}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage[most]{tcolorbox}
@@ -54,13 +59,15 @@
 \titleformat{\paragraph}[runin]{\normalsize\bfseries\color{navy}}{}{}{}[]
 \setlength{\parskip}{0.45em}
 \setlength{\parindent}{0pt}
+\widowpenalty=10000
+\clubpenalty=10000
 \setlist{itemsep=0.15em,topsep=0.3em}
 \captionsetup{font=small,labelfont={bf,color=navy}}
 
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\color{cObs}TP3 --- Agentic RAG sur la jurisprudence}
-\fancyhead[R]{\small\color{cObs}\auteur}
+\fancyhead[R]{\small\color{cObs}\auteur{} \& \binome}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
@@ -73,7 +80,7 @@
   rulecolor=\color{cObs!40},backgroundcolor=\color{soft!50},breaklines=true}
 
 \newcommand{\shot}[3]{% \shot{fichier}{largeur}{légende}
-  \IfFileExists{img/#1}{\begin{figure}[htbp]\centering
+  \IfFileExists{img/#1}{\begin{figure}[H]\centering
   \includegraphics[width=#2\textwidth]{img/#1}\caption{#3}\end{figure}}{}}
 \newcommand{\gen}[1]{\IfFileExists{generated/#1}{\input{generated/#1}}{\emph{(fichier \texttt{\detokenize{generated/#1}} à générer avec \texttt{python -m scripts.make\_report\_tables})}}}
 
@@ -81,21 +88,55 @@
 
 % ======================================================================= titre
 \begin{titlepage}
-\begin{tikzpicture}[remember picture,overlay]
-  \fill[navy] (current page.north west) rectangle ([yshift=-7.2cm]current page.north east);
-  \fill[gold] ([yshift=-7.2cm]current page.north west) rectangle ([yshift=-7.45cm]current page.north east);
-\end{tikzpicture}
-\vspace*{0.4cm}
-{\color{white}\sffamily
-{\large \cours}\\[1.6cm]
-{\fontsize{30}{36}\selectfont\bfseries Agentic RAG}\\[0.25cm]
-{\Large sur la jurisprudence de la Cour de cassation}\par}
-\vspace{3.2cm}
-{\large\bfseries\color{navy} Travaux pratiques n°3}\\[0.2cm]
-{\color{cObs} Du RAG statique (TP2) à un assistant juridique qui décide, appelle des outils,
-vérifie ses preuves et trace son exécution, avec un LLM local.}
+\centering
+\IfFileExists{img/logo_paris8.png}{\includegraphics[width=0.4\textwidth]{img/logo_paris8.png}}{}\par
+\vspace{1.2cm}
+{\Large\scshape Master Informatique - Ingénierie en IA (M2)}\par
+\vspace{0.2cm}
+{\normalsize\textbf{Module :} \module}\par
+\vspace{2.2cm}
+\rule{\linewidth}{1pt}\par
+\vspace{0.5cm}
+{\LARGE\bfseries\color{navy} Rapport de TP n°3 :}\par
+\vspace{0.3cm}
+{\Large\bfseries\color{navy} Construire un Agentic RAG sur la jurisprudence\\[2pt]
+de la Cour de cassation}\par
+\vspace{0.4cm}
+\rule{\linewidth}{1pt}\par
+\vspace{2.4cm}
+\begin{minipage}[t]{0.48\textwidth}
+\raggedright
+\textbf{Étudiants :}\\
+\auteur\\
+\binome
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\raggedleft
+\textbf{Encadrant :}\\
+\encadrant
+\end{minipage}
+\vfill
+\textbf{Date :} \daterendu\par
+\vspace{0.4cm}
+Année Universitaire 2026 -- 2027\par
+\end{titlepage}
 
-\vspace{1.4cm}
+\tableofcontents
+\vspace{1cm}
+\begin{keybox}
+\textbf{Guide de lecture.}
+La section~1 pose l'objectif et la démarche ; la section~2 rappelle le RAG du TP2, réutilisé comme
+outil. La section~3 décrit l'architecture de l'agent (graphe, état, outils, garde-fous, vérification,
+interface). La section~4 présente les traces réelles des trois scénarios demandés, la section~5 les
+compare au RAG statique, et la section~6 analyse ce qui fonctionne, les échecs observés et les
+améliorations possibles. Les annexes expliquent comment reproduire les résultats et définissent les
+termes techniques.
+\end{keybox}
+\newpage
+
+% ======================================================================= 1
+\section{Objectif et démarche}
+
 \begin{keybox}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
 \textbf{Corpus} & 1\,973 décisions de la Cour de cassation (2015--2025, publiées au Bulletin), 26\,568 passages \\
@@ -107,15 +148,6 @@ vérifie ses preuves et trace son exécution, avec un LLM local.}
 \end{tabularx}
 \end{keybox}
 
-\vfill
-{\large \auteur}\hfill{\large \today}
-\end{titlepage}
-
-\tableofcontents
-\newpage
-
-% ======================================================================= 1
-\section{Objectif et démarche}
 
 Le TP2 a produit un RAG \emph{statique} : pour chaque question, la même chaîne s'exécute
 (une recherche, des passages, une génération). Le TP3 transforme ce système en \textbf{agent} :
@@ -160,12 +192,12 @@ question de droit, décision, portée) ; la question-réponse travaille sur les 
 sélectionnée. Dans les deux cas le modèle doit citer ses sources \texttt{[P$n$]}, en JSON, et le code
 vérifie que chaque citation renvoie à un passage réellement fourni.
 
-\shot{tp2_recherche.png}{0.98}{Interface du TP2 : recherche hybride, résultats avec le passage le plus pertinent, fiche de l'affaire et résumé structuré sourcé.}
+\shot{tp2_recherche.png}{0.82}{Interface du TP2 : recherche hybride, résultats avec le passage le plus pertinent, fiche de l'affaire et résumé structuré sourcé.}
 
 % ======================================================================= 3
 \section{Architecture agentique}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[
   box/.style={draw=navy2,rounded corners=3pt,fill=white,align=center,font=\small,minimum height=1.3cm,text width=2.7cm,line width=0.7pt},
@@ -278,7 +310,7 @@ L'utilisateur voit en direct le nœud actif du graphe, l'outil appelé avec ses 
 l'observation, le résultat de la vérification et la condition d'arrêt. La réponse finale sépare les
 \textbf{sources du corpus} et les \textbf{sources externes} ; les citations sont cliquables.
 
-\shot{tp3_agent.png}{0.98}{Onglet « Agent juridique » : options (source externe, validation humaine, juge LLM, mémoire, limite d'étapes), graphe avec le nœud actif, trace étape par étape et réponse avec ses sources et ses mesures.}
+\shot{tp3_agent.png}{0.78}{Onglet « Agent juridique » : options (source externe, validation humaine, juge LLM, mémoire, limite d'étapes), graphe avec le nœud actif, trace étape par étape et réponse avec ses sources et ses mesures.}
 
 \subsection{Bonus réalisés}
 \begin{itemize}
@@ -289,6 +321,7 @@ l'observation, le résultat de la vérification et la condition d'arrêt. La ré
 \end{itemize}
 
 % ======================================================================= 4
+\clearpage
 \section{Tests des trois scénarios}
 
 Les traces ci-dessous sont générées automatiquement à partir des exécutions réelles
@@ -303,6 +336,7 @@ officiel d'un arrêt de la chambre sociale énonce la règle. On vérifie que l'
 
 {\small\gen{trace_s1.tex}}
 
+\clearpage
 \subsection{Scénario 2 --- Recherche multi-étapes}
 \emph{Question : Dans l'affaire n° 23-20.161 sur un bail rural, que reprochait le bailleur à l'arrêt d'appel
 et qu'a décidé la Cour de cassation ?} Il faut trouver la décision puis lire précisément le moyen
@@ -310,6 +344,7 @@ et qu'a décidé la Cour de cassation ?} Il faut trouver la décision puis lire 
 
 {\small\gen{trace_s2.tex}}
 
+\clearpage
 \subsection{Scénario 3 --- Information insuffisante}
 \emph{Question : Qu'est-ce que la théorie de l'imprévision et la Cour de cassation l'a-t-elle appliquée à un
 contrat ?} La notion est générale et le corpus ne contient pas forcément d'arrêt qui la nomme : le premier
@@ -319,6 +354,7 @@ Wikipédia comme de la jurisprudence.
 {\small\gen{trace_s3.tex}}
 
 % ======================================================================= 5
+\clearpage
 \section{Comparaison avec le RAG statique du TP2}
 
 Le RAG statique exécute, pour la même question, une recherche hybride, prend 5 passages (2 au plus par
@@ -351,6 +387,7 @@ trois essais, il n'a cité \emph{aucun} passage et a ajouté une justification i
 (« il ne s'agit pas d'un licenciement économique »), ce qu'aucun contrôle ne détecte dans un pipeline fixe.
 
 % ======================================================================= 6
+\clearpage
 \section{Analyse}
 
 \subsection{Ce qui fonctionne}
@@ -369,6 +406,7 @@ trois essais, il n'a cité \emph{aucun} passage et a ajouté une justification i
   \item \textbf{Vocabulaire.} « Que reprochait le bailleur ? » ne partage aucun mot avec « M. [T] fait grief à l'arrêt » : sans l'enrichissement de la requête par le vocabulaire des arrêts, le passage décisif n'était pas retrouvé.
   \item \textbf{Hallucination validée, puis corrigée.} Dans une version intermédiaire, la réponse du scénario 3 (« la Cour a appliqué l'imprévision au contrat de travail ») a été \emph{vérifiée} : le juge LLM l'avait bien rejetée, mais son objection avait été écartée parce que la plupart des mots de la phrase figuraient dans les preuves. Le mot décisif, « imprévision », n'y figurait pas. D'où le contrôle « notions clés sourcées » : un terme rare de la question (IDF $\geq 6$) repris dans la réponse doit apparaître dans les preuves.
   \item \textbf{Le rédacteur ignore la source externe.} Dans la trace finale du scénario 3, l'agent a bien récupéré la définition de Wikipédia, mais le modèle 3\,B rédige encore la même affirmation fausse au lieu de s'appuyer sur [E1]. Le vérificateur l'arrête : la réponse sort avec le statut \emph{non vérifiée}. Le système échoue proprement, mais il échoue.
+  \item \textbf{Non-déterminisme observé pendant la démo vidéo.} En relançant le scénario 2 en direct, le modèle a renvoyé une action \emph{vide} après la recherche ; le garde-fou « action invalide » a alors choisi de rédiger avant d'avoir lu l'affaire demandée. Le vérificateur a refusé la réponse (« la réponse s'appuie sur une autre affaire que celle demandée »), l'agent a lu la bonne décision et la réponse finale a été vérifiée, mais en 173\,s au lieu de 64\,s. Correction : la règle « affaire citée par son numéro mais pas encore lue » s'applique désormais avant toute autre, y compris sur une action invalide (test ajouté).
 \end{itemize}
 
 \subsection{Améliorations possibles}
@@ -388,23 +426,95 @@ corpus), il prend de meilleures décisions que le pipeline fixe, \emph{à condit
 un modèle de 3\,B, la qualité vient autant des garde-fous et du vérificateur en code que du LLM lui-même.
 \end{keybox}
 
-% ======================================================================= annexe
+% ======================================================================= conclusion
+\section{Conclusion}
+
+Ce TP a transformé le RAG statique du TP2 en un assistant juridique \emph{agentique} : le modèle
+choisit ses actions, le code exécute les outils, et un vérificateur décide si les preuves suffisent
+avant de laisser passer la réponse. Les trois scénarios montrent les trois comportements attendus :
+une seule recherche quand elle suffit, une lecture ciblée quand la question vise une affaire précise,
+et une relance (nouvelle requête puis source externe) quand le corpus ne répond pas.
+
+Le principal enseignement est que, avec un modèle de 3\,B paramètres exécuté sur CPU, la fiabilité
+ne vient pas du modèle seul : elle vient de l'encadrement en code (garde-fous, contrôles de
+citations, notions clés, affaire demandée) et de la \textbf{transparence} de l'exécution. Quand
+l'agent échoue, comme au scénario 3, il le signale au lieu de l'affirmer. C'est la propriété qui
+compte le plus pour un outil juridique.
+
+% ======================================================================= annexes
+\clearpage
 \appendix
-\section{Reproduire les résultats}
+\section{Installation et reproduction des résultats}
+
+\subsection{Prérequis}
+\begin{itemize}
+  \item Python 3.11 ou plus récent, environ 2\,Go d'espace disque libre, 8\,Go de RAM (16\,Go conseillés) ;
+  \item \href{https://ollama.com}{Ollama} installé, avec le modèle \texttt{llama3.2:3b} (2\,Go) ;
+  \item une connexion Internet pour la première préparation (dataset Hugging Face, modèle d'embeddings) et pour la source externe (Wikipédia).
+\end{itemize}
+
+\subsection{Installation et lancement}
 \begin{lstlisting}
+git clone https://github.com/anas-06/TP-LLM.git && cd TP-LLM
 pip install -r requirements.txt
 ollama pull llama3.2:3b
-python -m scripts.prepare_juris --n 2000      # corpus
-python -m scripts.build_index                 # index BM25 + embeddings
-uvicorn backend.main:app --port 8000          # interface : http://localhost:8000
-python -m scripts.run_scenarios               # 3 scénarios + RAG statique -> docs/traces/
-python -m scripts.make_report_tables          # tableaux LaTeX de ce rapport
-pytest -q                                     # tests (faux LLM)
-\end{lstlisting}
 
-Organisation du code : \texttt{backend/juris/} (corpus, index, RAG du TP2), \texttt{backend/agent/}
-(outils, graphe LangGraph, exécution et traces), \texttt{backend/juris\_api.py} (API),
-\texttt{frontend/app/} (interface), \texttt{scripts/} (préparation, index, scénarios, rapport),
-\texttt{tests/} (TP1 et agent, avec un faux LLM).
+python -m scripts.prepare_juris --n 2000      # corpus : ~2 000 décisions (~2 min)
+python -m scripts.build_index                 # index BM25 + embeddings (20-40 min sur CPU)
+uvicorn backend.main:app --port 8000          # interface : http://localhost:8000
+\end{lstlisting}
+L'onglet \emph{Recherche d'affaires} correspond au TP2, l'onglet \emph{Agent juridique} au TP3 ;
+le TP1 reste disponible sur \texttt{/tp1}.
+
+\subsection{Reproduire les expériences de ce rapport}
+\begin{lstlisting}
+python -m scripts.run_scenarios               # 3 scénarios + RAG statique -> docs/traces/
+python -m scripts.make_report_tables          # tableaux LaTeX des sections 4 et 5
+pytest -q                                     # 27 tests (le LLM est remplacé par un faux)
+\end{lstlisting}
+Une trace enregistrée peut être rejouée dans l'interface :
+\url{http://localhost:8000/?trace=scenario_s2}.
+
+\subsection{Organisation du code}
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Fichier ou dossier & Rôle \\ \midrule
+\texttt{backend/juris/corpus.py} & chargement des décisions, zones, découpage en passages \\
+\texttt{backend/juris/index.py} & index hybride BM25 + embeddings, fusion RRF \\
+\texttt{backend/juris/rag.py} & recherche, résumé, questions-réponses, RAG statique (TP2) \\
+\texttt{backend/agent/tools.py} & les trois outils de l'agent \\
+\texttt{backend/agent/graph.py} & graphe LangGraph : agent, outils, réponse, vérificateur, final \\
+\texttt{backend/agent/runner.py} & exécution en arrière-plan, trace en direct, mémoire, sauvegarde \\
+\texttt{backend/juris\_api.py} & routes de l'API (\texttt{/api/juris/*}, \texttt{/api/agent/*}) \\
+\texttt{frontend/app/} & interface web (HTML, CSS, JavaScript sans dépendance) \\
+\texttt{scripts/} & préparation des données, index, scénarios, tableaux et captures du rapport \\
+\texttt{docs/traces/} & traces des trois scénarios (JSON et Markdown) \\
+\texttt{tests/} & tests du TP1 et de l'agent \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Code source : \url{https://github.com/anas-06/TP-LLM}
+
+\section{Glossaire}
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Terme & Définition \\ \midrule
+RAG & \emph{Retrieval-Augmented Generation} : le modèle répond à partir de passages retrouvés dans un corpus plutôt que de sa seule mémoire. \\
+Agentic RAG & RAG dans lequel le modèle décide lui-même quand chercher, quoi lire et quand répondre, au lieu de suivre une chaîne fixe. \\
+BM25 & score de recherche lexicale fondé sur la fréquence des mots dans le passage et leur rareté dans le corpus. \\
+Embedding & vecteur qui représente le sens d'un texte ; deux textes proches ont des vecteurs proches (recherche dense). \\
+RRF & \emph{Reciprocal Rank Fusion} : fusion de plusieurs classements par la somme de $1/(k+\text{rang})$. \\
+IDF & \emph{Inverse Document Frequency} : mesure de la rareté d'un mot dans le corpus ; un IDF élevé signale un terme précis. \\
+Garde-fou & règle écrite en code qui corrige une décision invalide du modèle (action inconnue, recherche répétée\ldots). \\
+Juge LLM & appel au modèle chargé de vérifier qu'une réponse est justifiée par les passages fournis. \\
+SSE & \emph{Server-Sent Events} : flux HTTP par lequel le serveur envoie la trace au navigateur au fil de l'exécution. \\
+Sommaire & résumé officiel de la règle de droit posée par un arrêt publié au Bulletin. \\
+Dispositif & partie finale d'un arrêt qui énonce la décision (« rejette », « casse et annule »). \\
+Moyen & argument juridique présenté par l'auteur du pourvoi (« fait grief à l'arrêt de\ldots »). \\
+\bottomrule
+\end{tabularx}
+\end{center}
 
 \end{document}

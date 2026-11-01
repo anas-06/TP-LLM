@@ -1,5 +1,8 @@
 # Assistant juridique local : extraction (TP1), RAG (TP2) et Agentic RAG (TP3)
 
+Binôme : **Anas EL ALAOUI** et **Assala AMRANI** — Master Informatique, Ingénierie en IA (M2),
+Université Paris 8 — encadrant : M. Salah BOUCHAMA.
+
 Application web **100 % locale** sur la jurisprudence de la Cour de cassation
 (dataset Hugging Face [`antoinejeannot/jurisprudence`](https://huggingface.co/datasets/antoinejeannot/jurisprudence)) :
 

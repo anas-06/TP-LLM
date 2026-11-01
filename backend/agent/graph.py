@@ -181,8 +181,10 @@ def agent_node(state: AgentState, config) -> dict:
     unread = [c for c in state.get("candidates", []) if c["case_id"] not in read]
     unread.sort(key=lambda c: not c.get("exact"))  # la décision citée par son numéro d'abord
     exact_unread = [c for c in unread if c.get("exact")]
-    if exact_unread and action in {"search_cases", "answer", "external_search"}:
-        guard = "la décision citée par son numéro a été trouvée mais pas encore lue"
+    # Vaut aussi quand l'action du modèle est vide ou invalide (observé pendant la démo vidéo).
+    if exact_unread and action != "read_case":
+        guard = ("la décision citée par son numéro a été trouvée mais pas encore lue"
+                 + (f" (action proposée : « {action or '∅'} »)" if action not in allowed else ""))
         action, args = "read_case", {"case_id": exact_unread[0]["label"]}
     if action not in allowed:
         guard = f"action invalide « {action or '∅'} »"

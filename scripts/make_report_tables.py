@@ -108,7 +108,7 @@ def trace_table(sid: str) -> None:
         out.append("\\par\\smallskip{\\small")
         for s in srcs.get("corpus", []):
             out.append(f"\\textbf{{[{s['pid']}] Corpus}} --- {tex(s['title'])} ({tex(s['section'])}) : "
-                       f"\\emph{{« {tex(cut(s['text'], 260))} »}}\\par")
+                       f"\\emph{{« {tex(cut(s['text'], 170))} »}}\\par")
         for s in srcs.get("external", []):
             out.append(f"\\textbf{{[{s['pid']}] Externe}} --- {tex(s['title'])} : \\url{{{s['url']}}}\\par")
         out.append("}")
