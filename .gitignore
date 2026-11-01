@@ -3,3 +3,6 @@ __pycache__/
 .pytest_cache/
 .venv/
 data/raw/
+data/juris/
+runs/
+.claude/

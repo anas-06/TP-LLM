@@ -1,0 +1,32 @@
+\begin{longtable}{@{}r r l p{0.66\textwidth}@{}}
+\toprule \# & t (s) & Type & Détail \\ \midrule \endhead
+1 & 0.0 & \tracetag{cObs}{DÉBUT} & Question reçue ; 5 étapes max, source externe activée \\
+2 & 8.0 & \tracetag{cDecision}{DECISION} & \textbf{Rechercher dans le corpus} --- Aucune preuve collectée, commencer par une recherche de cas \newline\texttt{search\_cases("query": "imprévision et contrat", "k": 5)} \\
+3 & 8.0 & \tracetag{cTool}{TOOL} & \texttt{search\_cases(query='imprévision et contrat', k=5)} \\
+4 & 8.1 & \tracetag{cObs}{OBSERVATION} & 5 décision(s) trouvée(s) ; meilleure : Cass. Civ. 3e, 2019-10-17, n° 18-19.611 ; preuves ajoutées : C1, C2, C3, C4, C5 \\
+5 & 22.8 & \tracetag{cDecision}{DECISION} & \textbf{Rédiger la réponse} --- Pas de décision spécifique trouvée sur la théorie de l'imprévision et son application à un contrat \newline\textcolor{cCheck}{\emph{garde-fou : des preuves existent déjà : le vérificateur jugera si elles suffisent}} \\
+6 & 33.7 & \tracetag{cGen}{GÉNÉRATION} & Brouillon citant C1, C5 : \emph{La Cour de cassation a appliqué la théorie de l'imprévision à un contrat de travail, en considérant que la rupture du contrat se prescrit par douze mois à compter de la notification de la rupture.} \\
+7 & 53.8 & \tracetag{cCheck}{CHECK} & \textbf{Preuves suffisantes : non} --- échecs : notions clés sourcées, cohérence réponse/passages \newline{\small notion(s) de la question absente(s) des preuves : imprevis, theor; affirmations non justifiées : La Cour de cassation a appliqué la théorie de l'imprévision à un contrat de travail, en considérant\ldots{}} ; suite : insuffisant  nouvelle recherche \\
+8 & 65.9 & \tracetag{cDecision}{DECISION} & \textbf{Rechercher dans le corpus} --- Manque de précision sur l'application de la théorie de l'imprévision aux contrats de travail \newline\texttt{search\_cases("query": "théorie de l'imprévision et contrat de travail", "k": 5)} \\
+9 & 65.9 & \tracetag{cTool}{TOOL} & \texttt{search\_cases(query='théorie de l'imprévision et contrat de travail', k=5)} \\
+10 & 66.0 & \tracetag{cObs}{OBSERVATION} & 5 décision(s) trouvée(s) ; meilleure : Cass. Soc., 2022-09-21, n° 21-16.821 ; preuves ajoutées : C6, C7, C8, C9, C10 \\
+11 & 85.5 & \tracetag{cDecision}{DECISION} & \textbf{Consulter la source externe} --- Manque de précision sur l'application de la théorie de l'imprévision \newline\texttt{external\_search("query": "Qu'est-ce que la théorie de l'imprévision et la Cour de cassation l'a-t-elle appliquée à un contrat ?")} \newline\textcolor{cCheck}{\emph{garde-fou : recherche identique ou quasi identique à une recherche déjà faite}} \\
+12 & 85.5 & \tracetag{cTool}{TOOL} & \texttt{external\_search(query="Qu'est-ce que la théorie de l'imprévision et la Cour de cassation l'a-t-elle\ldots{}} \\
+13 & 86.7 & \tracetag{cObs}{OBSERVATION} & API externe : 2 article(s)  Théorie de l'imprévision, Théorie de l'imprévision en droit français ; preuves ajoutées : E1, E2 \\
+14 & 105.0 & \tracetag{cDecision}{DECISION} & \textbf{Lire une décision} --- Manque de précision sur l'application de la théorie de l'imprévision \newline\texttt{read\_case("case\_id": "D1")} \newline\textcolor{cCheck}{\emph{garde-fou : recherche identique ou quasi identique à une recherche déjà faite}} \\
+15 & 105.0 & \tracetag{cTool}{TOOL} & \texttt{read\_case(case\_id='D1', pourvoi='18-19.611')} \\
+16 & 105.0 & \tracetag{cObs}{OBSERVATION} & Cass. Civ. 3e, 2019-10-17, n° 18-19.611 (Cassation) : 5 passage(s) lus  Sommaire, Exposé du litige, Moyens du pourvoi, Motivations de la Cour, Dispositif ; preuves ajoutées : C11, C12, C13 \\
+17 & 105.0 & \tracetag{cDecision}{DECISION} & \textbf{Limite de 5 étapes atteinte : réponse avec les preuves disponibles.} ---  \newline\textcolor{cCheck}{\emph{garde-fou : limite d'étapes}} \\
+18 & 143.3 & \tracetag{cGen}{GÉNÉRATION} & Brouillon citant C12, C13, C8 : \emph{La Cour de cassation a appliqué la théorie de l'imprévision au contrat de travail, mais la rupture du contrat se prescrit par douze mois Î compter de la notification de la rupture.} \\
+19 & 167.7 & \tracetag{cCheck}{CHECK} & \textbf{Preuves suffisantes : non} --- échecs : cohérence réponse/passages \newline{\small affirmations non justifiées : La Cour de cassation a appliqué la théorie de l'imprévision au contrat de travail, mais la rupture du contrat se prescrit par douze mois Î compter de la notification de\ldots{}} ; suite : insuffisant  limite d'étapes atteinte \\
+20 & 167.7 & \tracetag{cFinal}{FINAL} & \textbf{Réponse non vérifiée} --- condition d'arrêt : limite d'étapes atteinte (réponse non vérifiée) \\
+\bottomrule \end{longtable}
+\begin{answerbox}{Réponse finale (non vérifiée)}
+La Cour de cassation a appliqué la théorie de l'imprévision au contrat de travail, mais la rupture du contrat se prescrit par douze mois Î compter de la notification de la rupture.
+\par\smallskip{\small
+\textbf{[C12] Corpus} --- Cass. Civ. 3e, 2019-10-17, n° 18-19.611 (Moyens du pourvoi) : \emph{« Sur le moyen unique du pourvoi n° 18-19.611 : »}\par
+\textbf{[C13] Corpus} --- Cass. Civ. 3e, 2019-10-17, n° 18-19.611 (Dispositif) : \emph{« PAR CES MOTIFS, et sans qu'il y ait lieu de statuer sur le moyen unique du pourvoi n° 18-20.550 : CASSE ET ANNULE, en toutes ses dispositions, l'arrêt rendu le 17 mai 2018, entre les parties, par la cour d'appel de Rennes ; remet, en conséquence, la cause et\ldots{} »}\par
+\textbf{[C8] Corpus} --- Cass. Soc., 2023-09-27, n° 21-25.973 (Motivations de la Cour) : \emph{« Réponse de la Cour Vu l'article L. 1231-1 du code du travail : 5. Selon ce texte, le contrat de travail à durée indéterminée peut être rompu à l'initiative de l'employeur ou du salarié, ou d'un commun accord. 6. Le salarié peut demander la résiliation\ldots{} »}\par
+}
+\end{answerbox}
+Mesures : 5 décisions de l'agent, 9 appels LLM, 4 appels d'outils, 9130 tokens, 167.7 s. Chemin : agent $\rightarrow$ tools $\rightarrow$ agent $\rightarrow$ answer $\rightarrow$ verify $\rightarrow$ agent $\rightarrow$ tools $\rightarrow$ agent $\rightarrow$ tools $\rightarrow$ agent $\rightarrow$ tools $\rightarrow$ agent $\rightarrow$ answer $\rightarrow$ verify $\rightarrow$ final.\par

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jurisprudence — Assistant RAG</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231f3a5f'/><text x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='Georgia'>J</text></svg>">
+  <link rel="stylesheet" href="/static/app/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="mark">J</span>
+    <div>
+      <div class="brand-title">Jurisprudence</div>
+      <div class="brand-sub">Recherche, résumé et agent juridique — LLM local</div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="search" role="tab">Recherche d'affaires <span class="tp">TP2</span></button>
+    <button class="tab" data-tab="agent" role="tab">Agent juridique <span class="tp">TP3</span></button>
+    <a class="tab" href="/tp1">Extraction <span class="tp">TP1</span></a>
+  </nav>
+  <div class="status" id="status"><span class="dot"></span><span id="status-text">Connexion…</span></div>
+</header>
+
+<!-- ============================== TP2 ============================== -->
+<main id="tab-search" class="view">
+  <section class="searchbar card">
+    <form id="search-form" class="search-row">
+      <input id="q" type="search" placeholder="Mots-clés ou question : « licenciement salarié protégé », « 23-20.161 »…" autocomplete="off">
+      <div class="seg" id="mode">
+        <button type="button" data-mode="hybrid" class="on">Hybride</button>
+        <button type="button" data-mode="bm25">BM25</button>
+        <button type="button" data-mode="dense">Dense</button>
+      </div>
+      <button class="btn primary" type="submit">Rechercher</button>
+    </form>
+    <div class="filters">
+      <select id="f-chamber"><option value="">Toutes les chambres</option></select>
+      <select id="f-solution"><option value="">Toutes les solutions</option></select>
+      <div class="chips" id="examples"></div>
+    </div>
+  </section>
+
+  <div class="split">
+    <section class="card results">
+      <div class="card-head"><h2>Résultats</h2><span class="muted small" id="results-meta"></span></div>
+      <div id="results" class="result-list"><p class="empty">Lancez une recherche pour afficher les décisions les plus pertinentes.</p></div>
+    </section>
+
+    <section class="card case" id="case-panel">
+      <div class="empty-state" id="case-empty">
+        <div class="empty-icon">§</div>
+        <p>Sélectionnez une décision pour afficher son résumé, l'interroger ou lire le texte intégral.</p>
+      </div>
+      <div id="case-content" hidden>
+        <div class="case-head">
+          <div>
+            <h2 id="case-title"></h2>
+            <div class="badges" id="case-badges"></div>
+          </div>
+        </div>
+        <p class="sommaire" id="case-sommaire"></p>
+        <div class="chips" id="case-themes"></div>
+        <nav class="subtabs">
+          <button class="subtab active" data-sub="summary">Résumé</button>
+          <button class="subtab" data-sub="qa">Questions</button>
+          <button class="subtab" data-sub="text">Texte intégral</button>
+        </nav>
+        <div class="sub" id="sub-summary">
+          <div class="row-between">
+            <p class="muted small">Résumé structuré généré par le LLM local, chaque information renvoie à un passage [P…].</p>
+            <button class="btn primary" id="btn-summary">Générer le résumé</button>
+          </div>
+          <div id="summary-out"></div>
+        </div>
+        <div class="sub" id="sub-qa" hidden>
+          <div id="chat" class="chat"></div>
+          <form id="ask-form" class="ask-row">
+            <input id="ask-q" placeholder="Posez une question sur cette décision…" autocomplete="off">
+            <button class="btn primary" type="submit">Envoyer</button>
+          </form>
+          <div class="chips" id="qa-examples"></div>
+        </div>
+        <div class="sub" id="sub-text" hidden><div id="fulltext"></div></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ============================== TP3 ============================== -->
+<main id="tab-agent" class="view" hidden>
+  <div class="agent-grid">
+    <section class="card agent-form">
+      <h2>Question</h2>
+      <textarea id="agent-q" rows="5" placeholder="Posez une question juridique…"></textarea>
+      <div class="scenarios" id="scenarios"></div>
+      <h3>Options</h3>
+      <label class="toggle"><input type="checkbox" id="opt-external" checked><span></span>Source externe (Wikipédia)</label>
+      <label class="toggle"><input type="checkbox" id="opt-approval"><span></span>Validation humaine avant l'appel externe</label>
+      <label class="toggle"><input type="checkbox" id="opt-check" checked><span></span>Vérification par juge LLM</label>
+      <label class="toggle"><input type="checkbox" id="opt-memory" checked><span></span>Mémoire entre questions</label>
+      <label class="range">Étapes maximum <output id="opt-max-out">5</output>
+        <input type="range" id="opt-max" min="2" max="8" value="5"></label>
+      <button class="btn primary wide" id="agent-run">Lancer l'agent</button>
+      <div class="memory" id="memory" hidden>
+        <div class="small muted">Affaire en mémoire</div>
+        <div id="memory-text"></div>
+        <button class="link" id="memory-clear">Oublier</button>
+      </div>
+    </section>
+
+    <section class="card agent-trace">
+      <div class="card-head"><h2>Exécution</h2><span class="muted small" id="trace-meta">En attente</span></div>
+      <div class="graph" id="graph">
+        <div class="gnode" data-node="agent"><b>Agent</b><small>décide</small></div>
+        <div class="garrow">⇄</div>
+        <div class="gnode" data-node="tools"><b>Outils</b><small>search · read · externe</small></div>
+        <div class="garrow">→</div>
+        <div class="gnode" data-node="answer"><b>Réponse</b><small>rédige</small></div>
+        <div class="garrow">→</div>
+        <div class="gnode" data-node="verify"><b>Vérificateur</b><small>preuves ?</small></div>
+        <div class="garrow">→</div>
+        <div class="gnode" data-node="final"><b>Final</b><small>sources</small></div>
+      </div>
+      <ol class="timeline" id="timeline"><li class="empty">La trace de l'agent s'affichera ici, étape par étape.</li></ol>
+    </section>
+
+    <section class="card agent-final">
+      <div class="card-head"><h2>Réponse</h2><span id="final-status"></span></div>
+      <div id="final-out"><p class="empty">La réponse finale, ses citations et la provenance des sources apparaîtront ici.</p></div>
+      <div class="metrics" id="metrics"></div>
+    </section>
+  </div>
+</main>
+
+<div class="modal" id="approval" hidden>
+  <div class="modal-box">
+    <h3>Autoriser l'appel externe ?</h3>
+    <p>L'agent veut interroger une source externe au corpus :</p>
+    <pre id="approval-args"></pre>
+    <div class="row-end">
+      <button class="btn" id="approval-no">Refuser</button>
+      <button class="btn primary" id="approval-yes">Autoriser</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app/app.js"></script>
+</body>
+</html>

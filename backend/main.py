@@ -18,11 +18,13 @@ from .llm_client import DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, Gener
 from .metrics import aggregate, mark_correct, score_document
 from .prompts import STRATEGIES
 from .relations import CORE_RELATIONS, RELATIONS, resolve_relation_set
+from .juris_api import router as juris_router
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 
-app = FastAPI(title="TP - Extraction d'informations avec un petit LLM")
+app = FastAPI(title="TP LLM : extraction (TP1), RAG (TP2) et Agentic RAG (TP3)")
 client = LLMClient()
+app.include_router(juris_router)
 
 
 class ExtractRequest(BaseModel):
@@ -136,4 +138,11 @@ app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
 
 @app.get("/")
 def index() -> FileResponse:
+    """Interface principale : jurisprudence (TP2) et agent (TP3)."""
+    return FileResponse(FRONTEND / "app" / "index.html")
+
+
+@app.get("/tp1")
+def tp1() -> FileResponse:
+    """Interface du TP1 (extraction de relations)."""
     return FileResponse(FRONTEND / "index.html")

@@ -1,0 +1,410 @@
+% Rapport TP3 - Agentic RAG sur la jurisprudence
+% Compilation : pdflatex rapport.tex (deux fois), ou xelatex, ou Overleaf (dossier docs/rapport complet).
+\documentclass[11pt,a4paper]{article}
+
+\newcommand{\auteur}{Anas El Alaoui} % <-- à vérifier
+\newcommand{\cours}{IA générative --- Séance 3 : Agents}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{lmodern}
+  \usepackage{newunicodechar}
+  \newunicodechar{→}{\ensuremath{\rightarrow}}
+  \newunicodechar{≈}{\ensuremath{\approx}}
+  \newunicodechar{✓}{\checkmark}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[french]{babel}
+\usepackage[a4paper,margin=2.2cm,headheight=14pt]{geometry}
+\usepackage{microtype}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,tabularx,array}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds,calc}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+% ---------- couleurs et mise en forme
+\definecolor{navy}{HTML}{1F3A5F}
+\definecolor{navy2}{HTML}{2D5A8E}
+\definecolor{gold}{HTML}{A7782F}
+\definecolor{soft}{HTML}{E8EEF6}
+\definecolor{cDecision}{HTML}{2B5EA7}
+\definecolor{cTool}{HTML}{6440A8}
+\definecolor{cObs}{HTML}{6B7385}
+\definecolor{cGen}{HTML}{1F3A5F}
+\definecolor{cCheck}{HTML}{8A5A00}
+\definecolor{cFinal}{HTML}{17734A}
+\definecolor{cError}{HTML}{B3261E}
+\newcommand{\tracetag}[2]{\textcolor{#1}{\footnotesize\bfseries\sffamily #2}}
+
+\titleformat{\section}{\Large\bfseries\color{navy}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries\color{navy2}}{\thesubsection}{0.7em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{navy}}{}{}{}[]
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.15em,topsep=0.3em}
+\captionsetup{font=small,labelfont={bf,color=navy}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{cObs}TP3 --- Agentic RAG sur la jurisprudence}
+\fancyhead[R]{\small\color{cObs}\auteur}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtcolorbox{answerbox}[1]{enhanced,colback=soft,colframe=navy2,boxrule=0.5pt,arc=2mm,
+  fonttitle=\bfseries\small,title={#1},left=2mm,right=2mm,top=1mm,bottom=1mm,breakable}
+\newtcolorbox{keybox}{enhanced,colback=white,colframe=gold,boxrule=0.6pt,arc=2mm,left=3mm,right=3mm,
+  borderline west={2.5pt}{0pt}{gold}}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,frame=single,
+  rulecolor=\color{cObs!40},backgroundcolor=\color{soft!50},breaklines=true}
+
+\newcommand{\shot}[3]{% \shot{fichier}{largeur}{légende}
+  \IfFileExists{img/#1}{\begin{figure}[htbp]\centering
+  \includegraphics[width=#2\textwidth]{img/#1}\caption{#3}\end{figure}}{}}
+\newcommand{\gen}[1]{\IfFileExists{generated/#1}{\input{generated/#1}}{\emph{(fichier \texttt{\detokenize{generated/#1}} à générer avec \texttt{python -m scripts.make\_report\_tables})}}}
+
+\begin{document}
+
+% ======================================================================= titre
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[navy] (current page.north west) rectangle ([yshift=-7.2cm]current page.north east);
+  \fill[gold] ([yshift=-7.2cm]current page.north west) rectangle ([yshift=-7.45cm]current page.north east);
+\end{tikzpicture}
+\vspace*{0.4cm}
+{\color{white}\sffamily
+{\large \cours}\\[1.6cm]
+{\fontsize{30}{36}\selectfont\bfseries Agentic RAG}\\[0.25cm]
+{\Large sur la jurisprudence de la Cour de cassation}\par}
+\vspace{3.2cm}
+{\large\bfseries\color{navy} Travaux pratiques n°3}\\[0.2cm]
+{\color{cObs} Du RAG statique (TP2) à un assistant juridique qui décide, appelle des outils,
+vérifie ses preuves et trace son exécution, avec un LLM local.}
+
+\vspace{1.4cm}
+\begin{keybox}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\textbf{Corpus} & 1\,973 décisions de la Cour de cassation (2015--2025, publiées au Bulletin), 26\,568 passages \\
+\textbf{Index} & hybride BM25 + embeddings \texttt{multilingual-e5-small}, fusion RRF \\
+\textbf{LLM} & \texttt{llama3.2:3b} servi par Ollama, en local sur CPU \\
+\textbf{Agent} & LangGraph : agent $\rightarrow$ outils $\rightarrow$ réponse $\rightarrow$ vérificateur, 5 étapes max \\
+\textbf{Outils} & \texttt{search\_cases}, \texttt{read\_case}, \texttt{external\_search} (Wikipédia FR) \\
+\textbf{Interface} & application web locale, trace en direct (SSE), sources corpus / externes séparées \\
+\end{tabularx}
+\end{keybox}
+
+\vfill
+{\large \auteur}\hfill{\large \today}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ======================================================================= 1
+\section{Objectif et démarche}
+
+Le TP2 a produit un RAG \emph{statique} : pour chaque question, la même chaîne s'exécute
+(une recherche, des passages, une génération). Le TP3 transforme ce système en \textbf{agent} :
+le modèle choisit l'action suivante (chercher, lire une affaire, consulter une source externe,
+répondre), le code exécute l'outil, l'observation revient dans l'état, et un
+\textbf{vérificateur} décide si les preuves suffisent avant de laisser passer la réponse.
+
+Trois principes ont guidé la conception :
+\begin{enumerate}
+  \item \textbf{Réutiliser le TP2 tel quel comme outil.} Le corpus, l'index et la recherche ne
+        changent pas : l'agent les appelle à travers \texttt{search\_cases} et \texttt{read\_case}.
+  \item \textbf{Contrôler un petit modèle par le code.} Un modèle de 3\,B paramètres sur CPU fait des
+        choix maladroits ; des \emph{garde-fous} explicites, visibles dans la trace, corrigent les
+        décisions invalides au lieu de les cacher.
+  \item \textbf{Tout rendre observable.} Chaque décision, appel d'outil, observation et vérification
+        est publiée en direct dans l'interface et sauvegardée (JSON + Markdown).
+\end{enumerate}
+
+% ======================================================================= 2
+\section{Point de départ : le RAG du TP2}
+
+\paragraph{Données.} Le fichier \texttt{cour\_de\_cassation.jsonl.gz} du dataset
+\texttt{antoinejeannot/jurisprudence} (environ 1\,Go, 553\,000 décisions) est lu en flux, sans être
+stocké. On garde les décisions rendues depuis 2015, \textbf{publiées au Bulletin} (celles qui font
+jurisprudence) et disposant d'un découpage en zones, puis on tire un échantillon équilibré par chambre
+(tirage par réservoir) : 1\,973 décisions distinctes, dont 94\,\% ont un \emph{sommaire} officiel.
+
+\paragraph{Découpage.} Le dataset indique pour chaque décision la position des zones
+\emph{introduction, exposé du litige, moyens, motivations, dispositif}. Le découpage suit ces zones
+(fenêtres de 170 mots, recouvrement de 35 mots) : un passage garde ainsi son \emph{rôle juridique},
+ce qui sera essentiel pour l'agent. Le sommaire et les thèmes forment un passage à part, souvent le
+meilleur point d'entrée pour une recherche par notion.
+
+\paragraph{Index hybride.} BM25 (tokenisation française, mots vides, racinisation Snowball) capte les
+termes exacts du droit et les numéros d'articles ; les embeddings \texttt{multilingual-e5-small}
+capturent les reformulations en langage naturel. Les deux classements sont fusionnés par
+\emph{Reciprocal Rank Fusion} ($k=60$), insensible aux échelles de score. Un numéro de pourvoi
+(\texttt{23-20.161}) donne un accès direct à la décision.
+
+\paragraph{Résumé et questions-réponses.} Le résumé suit la grille du juriste (faits, procédure,
+question de droit, décision, portée) ; la question-réponse travaille sur les passages de l'affaire
+sélectionnée. Dans les deux cas le modèle doit citer ses sources \texttt{[P$n$]}, en JSON, et le code
+vérifie que chaque citation renvoie à un passage réellement fourni.
+
+\shot{tp2_recherche.png}{0.98}{Interface du TP2 : recherche hybride, résultats avec le passage le plus pertinent, fiche de l'affaire et résumé structuré sourcé.}
+
+% ======================================================================= 3
+\section{Architecture agentique}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw=navy2,rounded corners=3pt,fill=white,align=center,font=\small,minimum height=1.3cm,text width=2.7cm,line width=0.7pt},
+  dec/.style={diamond,aspect=1.8,draw=gold,fill=gold!8,align=center,font=\small,inner sep=0pt,line width=0.7pt},
+  term/.style={rounded corners=8pt,fill=navy,text=white,align=center,font=\small\bfseries,minimum height=0.9cm,text width=2.4cm},
+  store/.style={cylinder,shape border rotate=90,aspect=0.2,draw=cObs,fill=soft,align=center,font=\footnotesize,minimum height=1.0cm,text width=2.2cm},
+  arr/.style={-{Stealth[length=2.6mm]},line width=0.7pt,color=navy2},
+  lab/.style={font=\scriptsize,color=cObs,fill=white,inner sep=1.5pt}]
+  \node[term]  (q)      at (2.6, 2.0)  {Question};
+  \node[box]   (agent)  at (2.6, 0)    {\textbf{agent}\\[1pt]\footnotesize LLM : action en JSON\\ + garde-fous en code};
+  \node[box]   (tools)  at (8.4, 0)    {\textbf{tools}\\[1pt]\footnotesize exécute l'outil,\\ ajoute les preuves};
+  \node[store] (idx)    at (12.6, 1.0) {Index TP2\\ BM25 + e5};
+  \node[store] (ext)    at (12.6, -0.9) {API externe\\ Wikipédia FR};
+  \node[box]   (answer) at (2.6, -3.0) {\textbf{answer}\\[1pt]\footnotesize rédige à partir\\ des preuves [C\#/E\#]};
+  \node[dec]   (verify) at (8.4, -3.0) {\textbf{verify}\\[-1pt]\footnotesize preuves\\[-2pt]\footnotesize suffisantes ?};
+  \node[term]  (final)  at (12.6, -3.0) {Final\\[-1pt]\footnotesize\mdseries réponse + sources};
+  \draw[arr] (q) -- (agent);
+  \draw[arr] ([yshift=3mm]agent.east) -- node[lab,above=1pt]{appel d'outil} ([yshift=3mm]tools.west);
+  \draw[arr] ([yshift=-3mm]tools.west) -- node[lab,below=1pt]{observation} ([yshift=-3mm]agent.east);
+  \draw[arr] (agent) -- node[lab]{answer} (answer);
+  \draw[arr] (answer) -- (verify);
+  \draw[arr] (verify) -- node[lab,above=2pt]{oui / limite} (final);
+  \draw[arr,dashed,color=gold] (verify.north) -- ++(0,0.75) -| node[lab,pos=0.25,above=1pt]{non : motif de l'échec} ([xshift=8mm]agent.south);
+  \draw[arr,dashed,color=cError] (agent.west) -- ++(-0.7,0) |- node[lab,pos=0.75,below=1pt]{limite atteinte sans preuve / erreur : arrêt contrôlé} ([yshift=-1.55cm]verify.south) -| (final.south);
+  \draw[dotted,cObs,line width=0.9pt] (tools.east) -- (idx.west);
+  \draw[dotted,cObs,line width=0.9pt] (tools.east) -- (ext.west);
+\end{tikzpicture}
+\caption{Graphe LangGraph de l'agent. Les flèches pleines sont le chemin nominal ; le vérificateur renvoie
+vers l'agent avec le motif de l'échec tant que la limite d'étapes n'est pas atteinte.}
+\label{fig:archi}
+\end{figure}
+
+\subsection{État partagé}
+L'état (\texttt{AgentState}) ne contient que ce qui sert à décider :
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Champ & Contenu \\ \midrule
+\texttt{question}, \texttt{memory} & question courante ; affaire et échange précédents (bonus mémoire) \\
+\texttt{evidence} & preuves citables numérotées : \texttt{C1, C2\ldots} (corpus), \texttt{E1\ldots} (externe) \\
+\texttt{candidates} & décisions trouvées, étiquetées \texttt{D1, D2\ldots} (l'agent manipule ces étiquettes courtes plutôt que des identifiants longs) \\
+\texttt{searches}, \texttt{read\_cases} & historique des recherches et des affaires lues (détection des répétitions) \\
+\texttt{iteration}, \texttt{max\_iterations} & compteur de décisions et limite (5 par défaut) \\
+\texttt{feedback}, \texttt{verification} & motif du dernier échec de vérification, détail des contrôles \\
+\texttt{draft}, \texttt{final}, \texttt{status} & brouillon, réponse finale avec sources, statut (vérifiée, non vérifiée, arrêt, erreur) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+La trace, les compteurs (appels LLM, tokens, latence) et la validation humaine vivent dans un
+\texttt{RunContext} transmis par la configuration du graphe : ils observent l'exécution sans polluer
+l'état métier.
+
+\subsection{Outils}
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Outil & Comportement \\ \midrule
+\texttt{search\_cases(query, k)} & recherche hybride du TP2, regroupée par décision ; renvoie titre, solution et extrait. Les trois premiers résultats fournissent déjà une preuve citable (souvent le sommaire). \\
+\texttt{read\_case(case\_id)} & lecture « juridique » : sommaire officiel + le passage le plus proche de la question dans chacune des zones \emph{exposé, moyens, motivations, dispositif}. La question est enrichie du vocabulaire des arrêts (« fait grief », « rejette »\ldots). \\
+\texttt{external\_search(query)} & API MediaWiki de Wikipédia FR (recherche + résumé introductif). Les résultats sont marqués \textbf{externes} et ne peuvent jamais être présentés comme de la jurisprudence. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Une erreur d'outil (\texttt{ToolError} : décision introuvable, API indisponible, requête vide) est
+affichée dans la trace en rouge, enregistrée dans l'état, et l'agent continue ; une erreur du LLM
+provoque un arrêt contrôlé.
+
+\subsection{Décision de l'agent et garde-fous}
+À chaque tour, le LLM reçoit un état résumé (question, recherches faites, décisions trouvées avec leurs
+étiquettes, affaires déjà lues, nombre de preuves, retour du vérificateur, étape $i$/5) et répond en JSON :
+\texttt{\{"reason", "action", "args"\}}. La justification est une phrase courte : la trace est
+\emph{opérationnelle}, pas un long raisonnement interne.
+
+Le modèle 3\,B se trompe de façon prévisible ; le code applique alors des garde-fous, chacun affiché
+dans la trace :
+\begin{itemize}
+  \item action inconnue $\rightarrow$ recherche (ou réponse si des preuves existent) ;
+  \item réponse demandée sans aucune preuve $\rightarrow$ recherche ;
+  \item recherche identique à une précédente $\rightarrow$ réponse si une affaire a été lue, sinon lecture du meilleur candidat, sinon source externe, sinon arrêt ;
+  \item affaire déjà lue $\rightarrow$ réponse (ou nouvelle affaire si le vérificateur a demandé plus de preuves) ;
+  \item numéro de pourvoi cité dans la question et décision trouvée mais non lue $\rightarrow$ lecture obligatoire ;
+  \item nouvelle réponse après un refus du vérificateur sans nouvelle preuve $\rightarrow$ nouvelle action de recherche.
+\end{itemize}
+
+\subsection{Vérification avant la réponse finale}
+Le nœud \texttt{verify} applique des contrôles déterministes puis un juge LLM :
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Contrôle & Règle \\ \midrule
+Preuves présentes & au moins un passage du corpus dans l'état \\
+Citations valides & la réponse cite au moins une preuve, et uniquement des preuves existantes \\
+Décision du corpus citée & une réponse appuyée seulement sur Wikipédia est refusée \\
+Affaire demandée citée & si la question vise un numéro de pourvoi, les passages cités viennent de cette affaire \\
+Notions clés sourcées & un terme rare de la question (IDF $\geq 6$, ex. « imprévision ») repris dans la réponse doit figurer dans les preuves \\
+Pas d'information non sourcée & chaque phrase partage au moins 40\,\% de ses mots (racinisés) avec les preuves fournies \\
+Cohérence réponse / passages & juge LLM (« chaque affirmation est-elle justifiée par les passages ? ») ; une objection n'est retenue que si l'affirmation est réellement peu présente dans les preuves \\
+\bottomrule
+\end{tabularx}
+\end{center}
+En cas d'échec, le motif (« la réponse s'appuie sur une autre affaire », « phrase non soutenue »,
+« manque : \ldots ») devient le \texttt{feedback} de l'agent, qui doit relancer une recherche,
+reformuler ou lire une autre affaire. À la limite d'étapes, la réponse est rendue avec le statut
+\emph{non vérifiée} et un avertissement visible.
+
+\subsection{Interface et exécution}
+Le run tourne dans un thread côté serveur (\texttt{graph.stream(..., stream\_mode="updates")}) ;
+chaque nœud publie ses événements dans une file, diffusée au navigateur en \emph{Server-Sent Events}.
+L'utilisateur voit en direct le nœud actif du graphe, l'outil appelé avec ses arguments, le résumé de
+l'observation, le résultat de la vérification et la condition d'arrêt. La réponse finale sépare les
+\textbf{sources du corpus} et les \textbf{sources externes} ; les citations sont cliquables.
+
+\shot{tp3_agent.png}{0.98}{Onglet « Agent juridique » : options (source externe, validation humaine, juge LLM, mémoire, limite d'étapes), graphe avec le nœud actif, trace étape par étape et réponse avec ses sources et ses mesures.}
+
+\subsection{Bonus réalisés}
+\begin{itemize}
+  \item \textbf{Mémoire} : l'affaire citée dans la réponse précédente est proposée à l'agent sous l'étiquette \texttt{D0} (question de suivi : « et quelle a été la solution ? »).
+  \item \textbf{Human-in-the-loop} : option de validation avant tout appel externe ; un refus est enregistré et l'agent continue sans la source externe.
+  \item \textbf{Observabilité} : appels LLM, tokens, temps passé dans le modèle et durée totale, par run et par appel.
+  \item \textbf{Rôles séparés} : le rédacteur et le vérificateur sont deux nœuds distincts avec des consignes différentes ; le superviseur (le graphe) décide quand appeler l'un ou l'autre.
+\end{itemize}
+
+% ======================================================================= 4
+\section{Tests des trois scénarios}
+
+Les traces ci-dessous sont générées automatiquement à partir des exécutions réelles
+(\texttt{python -m scripts.run\_scenarios}, fichiers dans \texttt{docs/traces/}). Les temps sont mesurés
+sur CPU, sans GPU.
+
+\subsection{Scénario 1 --- RAG simple}
+\emph{Question : Le juge judiciaire peut-il apprécier le caractère réel et sérieux du licenciement d'un
+salarié protégé autorisé par l'inspecteur du travail ?} Une seule recherche doit suffire : le sommaire
+officiel d'un arrêt de la chambre sociale énonce la règle. On vérifie que l'agent ne multiplie pas les
+étapes.
+
+{\small\gen{trace_s1.tex}}
+
+\subsection{Scénario 2 --- Recherche multi-étapes}
+\emph{Question : Dans l'affaire n° 23-20.161 sur un bail rural, que reprochait le bailleur à l'arrêt d'appel
+et qu'a décidé la Cour de cassation ?} Il faut trouver la décision puis lire précisément le moyen
+(« fait grief à l'arrêt\ldots ») et la réponse de la Cour.
+
+{\small\gen{trace_s2.tex}}
+
+\subsection{Scénario 3 --- Information insuffisante}
+\emph{Question : Qu'est-ce que la théorie de l'imprévision et la Cour de cassation l'a-t-elle appliquée à un
+contrat ?} La notion est générale et le corpus ne contient pas forcément d'arrêt qui la nomme : le premier
+retrieval est insuffisant, l'agent doit reformuler ou consulter la source externe, sans présenter
+Wikipédia comme de la jurisprudence.
+
+{\small\gen{trace_s3.tex}}
+
+% ======================================================================= 5
+\section{Comparaison avec le RAG statique du TP2}
+
+Le RAG statique exécute, pour la même question, une recherche hybride, prend 5 passages (2 au plus par
+décision) et génère une réponse citée en un seul appel LLM.
+
+\begin{table}[htbp]
+\centering\small
+\gen{comparaison.tex}
+\caption{Coût et résultat de l'agent et du RAG statique sur les trois scénarios (même modèle, même index).}
+\end{table}
+
+{\small\gen{comparaison_reponses.tex}}
+
+\paragraph{Où l'agent apporte une vraie valeur.} Sur le scénario 2, la question vise une affaire
+précise et deux éléments de la décision (le grief du pourvoi et la solution). Le RAG statique ne répond
+qu'à moitié : il recopie la règle posée par la Cour, sans le grief ni la solution, et sans citer de passage.
+L'agent trouve la décision par son numéro, la \emph{lit} zone par zone (moyen, motivations, dispositif) et
+produit une réponse complète, citée et vérifiée, en 64\,s. Sur le scénario 3, les deux systèmes
+reprennent la même affirmation fausse (« la Cour a appliqué l'imprévision au contrat de travail ») ; mais
+le RAG statique la présente comme un fait, alors que l'agent relance la recherche, consulte la source
+externe puis rend sa réponse avec le statut \emph{non vérifiée} et le motif. Sur une question juridique,
+savoir signaler qu'on ne sait pas vaut presque autant qu'une bonne réponse.
+
+\paragraph{Où le RAG simple est préférable.} Pour une question de principe dont la réponse tient dans un
+sommaire (scénario 1), le RAG statique donne la bonne conclusion en un seul appel LLM, en 15\,s contre
+85\,s pour l'agent (4 appels LLM, environ trois fois plus de tokens). Sur CPU, chaque appel au modèle
+3\,B coûte 10 à 40 secondes : la latence est le premier prix de l'agentivité. Le RAG statique est aussi
+plus prévisible (toujours le même chemin) et plus simple à tester. Sa faiblesse est ailleurs : dans nos
+trois essais, il n'a cité \emph{aucun} passage et a ajouté une justification inventée au scénario 1
+(« il ne s'agit pas d'un licenciement économique »), ce qu'aucun contrôle ne détecte dans un pipeline fixe.
+
+% ======================================================================= 6
+\section{Analyse}
+
+\subsection{Ce qui fonctionne}
+\begin{itemize}
+  \item Le chemin nominal \emph{recherche $\rightarrow$ lecture $\rightarrow$ réponse $\rightarrow$ vérification} est suivi sans étape inutile quand la question est claire.
+  \item Les garde-fous rendent le système robuste aux erreurs d'un petit modèle, et ces corrections sont visibles dans la trace au lieu d'être silencieuses.
+  \item La lecture « par zone » (exposé, moyens, motivations, dispositif) donne au rédacteur exactement les passages qu'un juriste lirait.
+  \item Le vérificateur détecte réellement des erreurs : réponses fondées sur la mauvaise affaire, affirmations absentes des passages, réponses sans citation.
+\end{itemize}
+
+\subsection{Échecs observés}
+\begin{itemize}
+  \item \textbf{Boucle de recherche.} Dans les premières versions, le modèle 3\,B relançait la même recherche ou relisait l'affaire déjà lue ; un premier garde-fou le redirigeait vers des affaires sans rapport, et la réponse finale portait sur une autre décision. Correction : une affaire déjà lue mène à la réponse, et la sélection des preuves privilégie l'affaire citée par son numéro.
+  \item \textbf{Vérification trompée par des preuves hors sujet.} Une réponse sur les « fumures et arrière-fumures » (affaire 23-19.267) a été validée pour une question sur l'affaire 23-20.161 : elle était bien soutenue par les passages cités, mais pas par la bonne affaire. D'où le contrôle « affaire demandée citée ».
+  \item \textbf{Faux négatifs du juge LLM.} Le juge 3\,B a déclaré « non justifiée » une phrase recopiant presque mot pour mot le moyen du pourvoi, ce qui a déclenché des recherches inutiles jusqu'à la limite d'étapes. Ses objections sont désormais confrontées au contrôle lexical.
+  \item \textbf{Vocabulaire.} « Que reprochait le bailleur ? » ne partage aucun mot avec « M. [T] fait grief à l'arrêt » : sans l'enrichissement de la requête par le vocabulaire des arrêts, le passage décisif n'était pas retrouvé.
+  \item \textbf{Hallucination validée, puis corrigée.} Dans une version intermédiaire, la réponse du scénario 3 (« la Cour a appliqué l'imprévision au contrat de travail ») a été \emph{vérifiée} : le juge LLM l'avait bien rejetée, mais son objection avait été écartée parce que la plupart des mots de la phrase figuraient dans les preuves. Le mot décisif, « imprévision », n'y figurait pas. D'où le contrôle « notions clés sourcées » : un terme rare de la question (IDF $\geq 6$) repris dans la réponse doit apparaître dans les preuves.
+  \item \textbf{Le rédacteur ignore la source externe.} Dans la trace finale du scénario 3, l'agent a bien récupéré la définition de Wikipédia, mais le modèle 3\,B rédige encore la même affirmation fausse au lieu de s'appuyer sur [E1]. Le vérificateur l'arrête : la réponse sort avec le statut \emph{non vérifiée}. Le système échoue proprement, mais il échoue.
+\end{itemize}
+
+\subsection{Améliorations possibles}
+\begin{itemize}
+  \item Un modèle plus grand ou spécialisé (7\,B quantifié, ou GPU) pour le juge et l'agent : la plupart des garde-fous compensent des erreurs de raisonnement du 3\,B.
+  \item Un \emph{reranker} (cross-encoder multilingue) après l'index hybride, pour mieux ordonner les passages avant la lecture.
+  \item Une vraie API juridique (Judilibre, Légifrance via PISTE) à la place de Wikipédia, pour citer les textes de loi visés.
+  \item Une décision « règle d'abord, LLM ensuite » : router sans LLM les questions qui contiennent un numéro de pourvoi, et réserver le LLM aux cas ambigus.
+  \item Autoriser une réponse \emph{négative} vérifiable (« aucune décision du corpus consulté n'applique cette notion », appuyée sur la liste des recherches faites), plutôt que d'exiger une décision du corpus citée : c'est la bonne réponse au scénario 3.
+\end{itemize}
+
+\begin{keybox}
+\textbf{Question directrice : de meilleures décisions, ou seulement plus d'appels LLM ?}
+Les deux, selon la question. Sur une question de principe, l'agent ajoute surtout des appels autour du
+même RAG. Sur une question qui exige de choisir une source (une affaire précise, une notion absente du
+corpus), il prend de meilleures décisions que le pipeline fixe, \emph{à condition} d'être encadré : avec
+un modèle de 3\,B, la qualité vient autant des garde-fous et du vérificateur en code que du LLM lui-même.
+\end{keybox}
+
+% ======================================================================= annexe
+\appendix
+\section{Reproduire les résultats}
+\begin{lstlisting}
+pip install -r requirements.txt
+ollama pull llama3.2:3b
+python -m scripts.prepare_juris --n 2000      # corpus
+python -m scripts.build_index                 # index BM25 + embeddings
+uvicorn backend.main:app --port 8000          # interface : http://localhost:8000
+python -m scripts.run_scenarios               # 3 scénarios + RAG statique -> docs/traces/
+python -m scripts.make_report_tables          # tableaux LaTeX de ce rapport
+pytest -q                                     # tests (faux LLM)
+\end{lstlisting}
+
+Organisation du code : \texttt{backend/juris/} (corpus, index, RAG du TP2), \texttt{backend/agent/}
+(outils, graphe LangGraph, exécution et traces), \texttt{backend/juris\_api.py} (API),
+\texttt{frontend/app/} (interface), \texttt{scripts/} (préparation, index, scénarios, rapport),
+\texttt{tests/} (TP1 et agent, avec un faux LLM).
+
+\end{document}

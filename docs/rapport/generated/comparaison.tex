@@ -1,0 +1,14 @@
+\begin{tabular}{@{}l l l r r r r@{}}
+\toprule
+Scénario & Système & Résultat & Appels LLM & Outils & Tokens & Durée (s) \\ \midrule
+RAG simple & Agent & vérifiée & 4 & 1 & 4898 & 85.2 \\
+ & RAG statique & répond & 1 & 1 & 1768 & 15.1 \\
+\addlinespace
+Multi-étapes & Agent & vérifiée & 5 & 2 & 3723 & 64.5 \\
+ & RAG statique & répond & 1 & 1 & 1359 & 10.9 \\
+\addlinespace
+Information insuffisante & Agent & non vérifiée & 9 & 4 & 9130 & 167.7 \\
+ & RAG statique & répond & 1 & 1 & 1619 & 16.6 \\
+\addlinespace
+\bottomrule
+\end{tabular}

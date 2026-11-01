@@ -1,0 +1,21 @@
+\begin{longtable}{@{}r r l p{0.66\textwidth}@{}}
+\toprule \# & t (s) & Type & Détail \\ \midrule \endhead
+1 & 0.0 & \tracetag{cObs}{DÉBUT} & Question reçue ; 5 étapes max, source externe activée \\
+2 & 5.7 & \tracetag{cDecision}{DECISION} & \textbf{Rechercher dans le corpus} --- Aucune preuve collectée, commencer une recherche \newline\texttt{search\_cases("query": "23-20.161 bail rural", "k": 5)} \\
+3 & 5.7 & \tracetag{cTool}{TOOL} & \texttt{search\_cases(query='23-20.161 bail rural', k=5)} \\
+4 & 5.7 & \tracetag{cObs}{OBSERVATION} & 5 décision(s) trouvée(s) ; meilleure : Cass. Civ. 3e, 2025-03-13, n° 23-20.161 ; preuves ajoutées : C1, C2, C3, C4 \\
+5 & 19.9 & \tracetag{cDecision}{DECISION} & \textbf{Lire une décision} --- Pas de décision spécifique trouvée pour l'affaire 23-20.161 \newline\texttt{read\_case("case\_id": "D1")} \newline\textcolor{cCheck}{\emph{garde-fou : la décision citée par son numéro a été trouvée mais pas encore lue}} \\
+6 & 19.9 & \tracetag{cTool}{TOOL} & \texttt{read\_case(case\_id='D1', pourvoi='23-20.161')} \\
+7 & 19.9 & \tracetag{cObs}{OBSERVATION} & Cass. Civ. 3e, 2025-03-13, n° 23-20.161 (Rejet) : 4 passage(s) lus  Exposé du litige, Moyens du pourvoi, Motivations de la Cour, Dispositif ; preuves ajoutées : C5, C6, C7, C8 \\
+8 & 27.3 & \tracetag{cDecision}{DECISION} & \textbf{Rédiger la réponse} --- La question cite un numéro de pourvoi et une affaire précise, il faut donc lire la décision déjà trouvée \newline\textcolor{cCheck}{\emph{garde-fou : décision déjà lue}} \\
+9 & 57.2 & \tracetag{cGen}{GÉNÉRATION} & Brouillon citant C7 : \emph{Le bailleur reprochait à l'arrêt d'appel qu'il n'avait pas été entendu ou appelé à la procédure, ce qui violait l'article 14 du code de procédure civile. La Cour de cassation a décidé que ce moyen n'est pas fondé et a rejeté le\ldots{}} \\
+10 & 64.5 & \tracetag{cCheck}{CHECK} & \textbf{Preuves suffisantes : oui} ; suite : preuves suffisantes \\
+11 & 64.5 & \tracetag{cFinal}{FINAL} & \textbf{Réponse vérifiée} --- condition d'arrêt : réponse finale vérifiée \\
+\bottomrule \end{longtable}
+\begin{answerbox}{Réponse finale (vérifiée)}
+Le bailleur reprochait à l'arrêt d'appel qu'il n'avait pas été entendu ou appelé à la procédure, ce qui violait l'article 14 du code de procédure civile. La Cour de cassation a décidé que ce moyen n'est pas fondé et a rejeté le pourvoi.
+\par\smallskip{\small
+\textbf{[C7] Corpus} --- Cass. Civ. 3e, 2025-03-13, n° 23-20.161 (Motivations de la Cour) : \emph{« Réponse de la Cour 6. Le preneur à bail rural, agissant en contestation du congé aux fins de reprise pour exploiter délivré par le bailleur, n'est tenu de mettre en cause à l'instance que ce dernier, qui a seul, par cet acte, manifesté sa volonté de rompre\ldots{} »}\par
+}
+\end{answerbox}
+Mesures : 3 décisions de l'agent, 5 appels LLM, 2 appels d'outils, 3723 tokens, 64.5 s. Chemin : agent $\rightarrow$ tools $\rightarrow$ agent $\rightarrow$ tools $\rightarrow$ agent $\rightarrow$ answer $\rightarrow$ verify $\rightarrow$ final.\par

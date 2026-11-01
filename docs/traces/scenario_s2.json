@@ -1,0 +1,467 @@
+{
+ "run_id": "109bec2082",
+ "question": "Dans l'affaire n° 23-20.161 sur un bail rural, que reprochait le bailleur à l'arrêt d'appel et qu'a décidé la Cour de cassation ?",
+ "options": {
+  "max_iterations": 5,
+  "use_external": true,
+  "require_approval": false,
+  "llm_check": true,
+  "use_memory": true,
+  "model": null,
+  "session_id": "scenario-s2"
+ },
+ "started": "2026-11-01T21:35:20",
+ "graph_path": [
+  "agent",
+  "tools",
+  "agent",
+  "tools",
+  "agent",
+  "answer",
+  "verify",
+  "final"
+ ],
+ "final": {
+  "answer": "Le bailleur reprochait à l'arrêt d'appel qu'il n'avait pas été entendu ou appelé à la procédure, ce qui violait l'article 14 du code de procédure civile. La Cour de cassation a décidé que ce moyen n'est pas fondé et a rejeté le pourvoi.",
+  "status": "vérifiée",
+  "stop_reason": "réponse finale vérifiée",
+  "sources": {
+   "corpus": [
+    {
+     "pid": "C7",
+     "title": "Cass. Civ. 3e, 2025-03-13, n° 23-20.161",
+     "case_id": "67d2843bf79d05e49e360b10",
+     "section": "Motivations de la Cour",
+     "text": "Réponse de la Cour 6. Le preneur à bail rural, agissant en contestation du congé aux fins de reprise pour exploiter délivré par le bailleur, n'est tenu de mettre en cause à l'instance que ce dernier, qui a seul, par cet acte, manifesté sa volonté de rompre le bail. 7. Le moyen, qui postule le contraire, n'est pas fondé."
+    }
+   ],
+   "external": []
+  },
+  "warning": null,
+  "iterations": 3,
+  "metrics": {
+   "llm_calls": 5,
+   "prompt_tokens": 3463,
+   "completion_tokens": 260,
+   "llm_seconds": 64.4,
+   "calls": [
+    {
+     "purpose": "décision",
+     "latency_s": 5.7,
+     "prompt_tokens": 443,
+     "completion_tokens": 40
+    },
+    {
+     "purpose": "décision",
+     "latency_s": 14.14,
+     "prompt_tokens": 847,
+     "completion_tokens": 55
+    },
+    {
+     "purpose": "décision",
+     "latency_s": 7.41,
+     "prompt_tokens": 864,
+     "completion_tokens": 54
+    },
+    {
+     "purpose": "réponse",
+     "latency_s": 29.87,
+     "prompt_tokens": 1019,
+     "completion_tokens": 94
+    },
+    {
+     "purpose": "vérification",
+     "latency_s": 7.29,
+     "prompt_tokens": 290,
+     "completion_tokens": 17
+    }
+   ],
+   "tool_calls": 2,
+   "tool_errors": 0,
+   "total_seconds": 64.5
+  }
+ },
+ "events": [
+  {
+   "step": 1,
+   "type": "START",
+   "title": "Question reçue",
+   "node": "start",
+   "t": 0.0,
+   "data": {
+    "question": "Dans l'affaire n° 23-20.161 sur un bail rural, que reprochait le bailleur à l'arrêt d'appel et qu'a décidé la Cour de cassation ?",
+    "options": {
+     "max_iterations": 5,
+     "use_external": true,
+     "require_approval": false,
+     "llm_check": true,
+     "use_memory": true,
+     "model": null,
+     "session_id": "scenario-s2"
+    },
+    "memory": null
+   },
+   "seq": 0
+  },
+  {
+   "step": 2,
+   "type": "NODE",
+   "title": "Agent : choix de la prochaine action",
+   "node": "agent",
+   "t": 0.0,
+   "data": {},
+   "seq": 1
+  },
+  {
+   "step": 3,
+   "type": "DECISION",
+   "title": "Rechercher dans le corpus",
+   "node": "agent",
+   "t": 5.7,
+   "data": {
+    "action": "search_cases",
+    "args": {
+     "query": "23-20.161 bail rural",
+     "k": 5
+    },
+    "reason": "Aucune preuve collectée, commencer une recherche",
+    "guardrail": null,
+    "raw": null
+   },
+   "seq": 2
+  },
+  {
+   "step": 4,
+   "type": "NODE",
+   "title": "Outil : search_cases",
+   "node": "tools",
+   "t": 5.7,
+   "data": {},
+   "seq": 3
+  },
+  {
+   "step": 5,
+   "type": "TOOL",
+   "title": "search_cases(query='23-20.161 bail rural', k=5)",
+   "node": "tools",
+   "t": 5.7,
+   "data": {
+    "tool": "search_cases",
+    "args": {
+     "query": "23-20.161 bail rural",
+     "k": 5
+    }
+   },
+   "seq": 4
+  },
+  {
+   "step": 6,
+   "type": "OBSERVATION",
+   "title": "5 décision(s) trouvée(s) ; meilleure : Cass. Civ. 3e, 2025-03-13, n° 23-20.161",
+   "node": "tools",
+   "t": 5.73,
+   "data": {
+    "tool": "search_cases",
+    "results": [
+     {
+      "label": "D1",
+      "title": "Cass. Civ. 3e, 2025-03-13, n° 23-20.161",
+      "solution": "Rejet",
+      "snippet": "Thèmes : bail rural"
+     },
+     {
+      "label": "D2",
+      "title": "Cass. Civ. 3e, 2023-10-26, n° 21-25.745",
+      "solution": "Cassation",
+      "snippet": "Examen du moyen Enoncé du moyen 5. Le bailleur fait grief à l'arrêt de prononcer la nullité du bail rural à long terme, alors « que les nullités sont d'interprétation stricte ; qu'aucune disposition ne sanctionne de nullité le bail […]"
+     },
+     {
+      "label": "D3",
+      "title": "Cass. Civ. 3e, 2017-03-02, n° 15-24.921",
+      "solution": "Cassation",
+      "snippet": "Attendu, selon l'arrêt attaqué (Angers, 16 juin 2015), que, par acte du 29 décembre 2009, MM. Y..., preneurs à bail rural de parcelles appartenant à la SCI les Roches, ont saisi le tribunal paritaire des baux ruraux en régularisation du […]"
+     },
+     {
+      "label": "D4",
+      "title": "Cass. Civ. 3e, 2024-07-11, n° 21-23.372",
+      "solution": "Rejet",
+      "snippet": "Le bénéficiaire de la cession a droit au renouvellement de son bail. 16. Selon l'article L. 411-35 du code rural et de la pêche maritime, à défaut d'agrément du bailleur, la cession peut être autorisée par le tribunal paritaire des […]"
+     },
+     {
+      "label": "D5",
+      "title": "Cass. Civ. 3e, 2024-09-26, n° 23-13.893",
+      "solution": "Rejet",
+      "snippet": "Les Harys avant le 21 juin 2018, qu'à la date de la demande de résiliation du bail, le 21 février 2020, la situation était régularisée, Mme [D] étant entrée dans la société en qualité de gérante-associée, la cour d'appel a […]"
+     }
+    ],
+    "new_evidence": [
+     "C1",
+     "C2",
+     "C3",
+     "C4"
+    ],
+    "latency_s": 0.03
+   },
+   "seq": 5
+  },
+  {
+   "step": 7,
+   "type": "NODE",
+   "title": "Agent : choix de la prochaine action",
+   "node": "agent",
+   "t": 5.73,
+   "data": {},
+   "seq": 6
+  },
+  {
+   "step": 8,
+   "type": "DECISION",
+   "title": "Lire une décision",
+   "node": "agent",
+   "t": 19.88,
+   "data": {
+    "action": "read_case",
+    "args": {
+     "case_id": "67d2843bf79d05e49e360b10",
+     "label": "D1"
+    },
+    "reason": "Pas de décision spécifique trouvée pour l'affaire 23-20.161",
+    "guardrail": "la décision citée par son numéro a été trouvée mais pas encore lue",
+    "raw": null
+   },
+   "seq": 7
+  },
+  {
+   "step": 9,
+   "type": "NODE",
+   "title": "Outil : read_case",
+   "node": "tools",
+   "t": 19.88,
+   "data": {},
+   "seq": 8
+  },
+  {
+   "step": 10,
+   "type": "TOOL",
+   "title": "read_case(case_id='D1', pourvoi='23-20.161')",
+   "node": "tools",
+   "t": 19.88,
+   "data": {
+    "tool": "read_case",
+    "args": {
+     "case_id": "D1",
+     "pourvoi": "23-20.161"
+    }
+   },
+   "seq": 9
+  },
+  {
+   "step": 11,
+   "type": "OBSERVATION",
+   "title": "Cass. Civ. 3e, 2025-03-13, n° 23-20.161 (Rejet) : 4 passage(s) lus — Exposé du litige, Moyens du pourvoi, Motivations de la Cour, Dispositif",
+   "node": "tools",
+   "t": 19.88,
+   "data": {
+    "tool": "read_case",
+    "results": [
+     {
+      "section": "Exposé du litige",
+      "text": "Faits et procédure 1. Selon l'arrêt attaqué (Rouen, 22 juin 2023), par acte du 21 juillet 1994, [U] [T] a donné à bail à M. [Y] diverses parcelles agricoles. 2. Par acte du 20 décembre 2019, M. [O] [T"
+     },
+     {
+      "section": "Moyens du pourvoi",
+      "text": "Sur le deuxième moyen Enoncé du moyen 5. M. [T] fait grief à l'arrêt d'annuler le congé délivré le 20 décembre 2019, alors « que nulle partie ne peut être jugée sans avoir été entendue ou appelée ; qu"
+     },
+     {
+      "section": "Motivations de la Cour",
+      "text": "Réponse de la Cour 6. Le preneur à bail rural, agissant en contestation du congé aux fins de reprise pour exploiter délivré par le bailleur, n'est tenu de mettre en cause à l'instance que ce dernier, "
+     },
+     {
+      "section": "Dispositif",
+      "text": "PAR CES MOTIFS, la Cour : REJETTE le pourvoi ; Condamne M. [T] aux dépens ; En application de l'article 700 du code de procédure civile, rejette la demande ; Ainsi fait et jugé par la Cour de cassatio"
+     }
+    ],
+    "new_evidence": [
+     "C5",
+     "C6",
+     "C7",
+     "C8"
+    ],
+    "latency_s": 0.0
+   },
+   "seq": 10
+  },
+  {
+   "step": 12,
+   "type": "NODE",
+   "title": "Agent : choix de la prochaine action",
+   "node": "agent",
+   "t": 19.88,
+   "data": {},
+   "seq": 11
+  },
+  {
+   "step": 13,
+   "type": "DECISION",
+   "title": "Rédiger la réponse",
+   "node": "agent",
+   "t": 27.29,
+   "data": {
+    "action": "answer",
+    "args": {},
+    "reason": "La question cite un numéro de pourvoi et une affaire précise, il faut donc lire la décision déjà trouvée",
+    "guardrail": "décision déjà lue",
+    "raw": null
+   },
+   "seq": 12
+  },
+  {
+   "step": 14,
+   "type": "NODE",
+   "title": "Rédaction de la réponse",
+   "node": "answer",
+   "t": 27.29,
+   "data": {},
+   "seq": 13
+  },
+  {
+   "step": 15,
+   "type": "GENERATION",
+   "title": "Brouillon de réponse rédigé",
+   "node": "answer",
+   "t": 57.16,
+   "data": {
+    "answer": "Le bailleur reprochait à l'arrêt d'appel qu'il n'avait pas été entendu ou appelé à la procédure, ce qui violait l'article 14 du code de procédure civile. La Cour de cassation a décidé que ce moyen n'est pas fondé et a rejeté le pourvoi.",
+    "citations": [
+     "C7"
+    ],
+    "found": true,
+    "evidence_given": [
+     "C1",
+     "C5",
+     "C6",
+     "C7",
+     "C8"
+    ]
+   },
+   "seq": 14
+  },
+  {
+   "step": 16,
+   "type": "NODE",
+   "title": "Vérification des preuves",
+   "node": "verify",
+   "t": 57.16,
+   "data": {},
+   "seq": 15
+  },
+  {
+   "step": 17,
+   "type": "CHECK",
+   "title": "Preuves suffisantes : oui",
+   "node": "verify",
+   "t": 64.46,
+   "data": {
+    "ok": true,
+    "checks": {
+     "preuves_presentes": true,
+     "citations_valides": true,
+     "source_corpus_citee": true,
+     "reponse_trouvee": true,
+     "affaire_demandee_citee": true,
+     "pas_d_info_non_sourcee": true,
+     "notions_cles_sourcees": true,
+     "coherence_reponse_passages": true
+    },
+    "unsupported_sentences": [],
+    "judge": {
+     "supported": true,
+     "unsupported_claims": [],
+     "missing": "",
+     "objections_retenues": [],
+     "objections_ecartees": []
+    },
+    "feedback": null,
+    "next": "preuves suffisantes"
+   },
+   "seq": 16
+  },
+  {
+   "step": 18,
+   "type": "NODE",
+   "title": "Réponse finale",
+   "node": "final",
+   "t": 64.46,
+   "data": {},
+   "seq": 17
+  },
+  {
+   "step": 19,
+   "type": "FINAL",
+   "title": "Réponse vérifiée",
+   "node": "final",
+   "t": 64.46,
+   "data": {
+    "answer": "Le bailleur reprochait à l'arrêt d'appel qu'il n'avait pas été entendu ou appelé à la procédure, ce qui violait l'article 14 du code de procédure civile. La Cour de cassation a décidé que ce moyen n'est pas fondé et a rejeté le pourvoi.",
+    "status": "vérifiée",
+    "stop_reason": "réponse finale vérifiée",
+    "sources": {
+     "corpus": [
+      {
+       "pid": "C7",
+       "title": "Cass. Civ. 3e, 2025-03-13, n° 23-20.161",
+       "case_id": "67d2843bf79d05e49e360b10",
+       "section": "Motivations de la Cour",
+       "text": "Réponse de la Cour 6. Le preneur à bail rural, agissant en contestation du congé aux fins de reprise pour exploiter délivré par le bailleur, n'est tenu de mettre en cause à l'instance que ce dernier, qui a seul, par cet acte, manifesté sa volonté de rompre le bail. 7. Le moyen, qui postule le contraire, n'est pas fondé."
+      }
+     ],
+     "external": []
+    },
+    "warning": null,
+    "iterations": 3,
+    "metrics": {
+     "llm_calls": 5,
+     "prompt_tokens": 3463,
+     "completion_tokens": 260,
+     "llm_seconds": 64.4,
+     "calls": [
+      {
+       "purpose": "décision",
+       "latency_s": 5.7,
+       "prompt_tokens": 443,
+       "completion_tokens": 40
+      },
+      {
+       "purpose": "décision",
+       "latency_s": 14.14,
+       "prompt_tokens": 847,
+       "completion_tokens": 55
+      },
+      {
+       "purpose": "décision",
+       "latency_s": 7.41,
+       "prompt_tokens": 864,
+       "completion_tokens": 54
+      },
+      {
+       "purpose": "réponse",
+       "latency_s": 29.87,
+       "prompt_tokens": 1019,
+       "completion_tokens": 94
+      },
+      {
+       "purpose": "vérification",
+       "latency_s": 7.29,
+       "prompt_tokens": 290,
+       "completion_tokens": 17
+      }
+     ],
+     "tool_calls": 2,
+     "tool_errors": 0,
+     "total_seconds": 64.5
+    }
+   },
+   "seq": 18
+  }
+ ]
+}

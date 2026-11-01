@@ -1,0 +1,430 @@
+{
+ "run_id": "6209091acf",
+ "question": "Le juge judiciaire peut-il apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail ?",
+ "options": {
+  "max_iterations": 5,
+  "use_external": true,
+  "require_approval": false,
+  "llm_check": true,
+  "use_memory": true,
+  "model": null,
+  "session_id": "scenario-s1"
+ },
+ "started": "2026-11-01T21:33:39",
+ "graph_path": [
+  "agent",
+  "tools",
+  "agent",
+  "answer",
+  "verify",
+  "final"
+ ],
+ "final": {
+  "answer": "Non, le juge judiciaire ne peut pas apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail",
+  "status": "vérifiée",
+  "stop_reason": "réponse finale vérifiée",
+  "sources": {
+   "corpus": [
+    {
+     "pid": "C1",
+     "title": "Cass. Soc., 2018-09-12, n° 16-26.853",
+     "case_id": "5fca877490b1da78832773c7",
+     "section": "Moyens du pourvoi",
+     "text": "tribunal du commerce, en ce qui concerne les capitaines ayant le commandement du navire\" ; que s'il instaure une procédure de conciliation obligatoire et préalable à une action judiciaire, ce texte n'impose pas à l'employeur de saisir l'inspecteur du travail avant un licenciement ; qu'en considérant que la société Aremiti avait l'obligation de saisir l'inspecteur du travail avant de procéder au licenciement de M. X... et que, n'ayant pas eu recours à cette procédure de conciliation préalable, elle ne pouvait de bonne foi reprocher au salarié de n'avoir pas lui-même saisi l'Inspection du travail avant de porter ses demandes devant le tribunal du travail, cependant que la société Aremiti n'avait nullement l'obligation de saisir l'inspecteur du travail avant de procéder au licenciement de M. X..., de sorte qu'aucun manquement de sa part à la bonne foi ne se trouvait caractérisée en l'espèce, la cour d'appel a violé par refus d'application l'article 37 de la convention collective du 14 mai 1959 […]"
+    },
+    {
+     "pid": "C2",
+     "title": "Cass. Soc., 2018-09-12, n° 16-26.853",
+     "case_id": "5fca877490b1da78832773c7",
+     "section": "Sommaire",
+     "text": "Aux termes de l'article 28 de la convention collective du 14 mai 1959 applicable aux officiers des entreprises de navigation du territoire de la Polynésie française armant des navires de commerce de plus de 25 tonneaux de jauge brute au cabotage colonial, la suspension de fonction et de solde et la révocation de l'officier titularisé ne peuvent être prononcées par la direction qu'après avis d'une commission d'enquête constituée paritairement et comprenant le chef d'entreprise ou son délégué, le chef d'armement ou du service technique ou son délégué, le capitaine le plus ancien à Papeete, deux officiers ayant un grade au moins égal à celui de l'intéressé, présents à Papeete et dont l'un appartient à l'entreprise. Une cour d'appel, qui a relevé qu'alors qu'est exigée une composition paritaire de la commission d'enquête, l'employeur ne conteste pas que les deux seules personnes qui pouvaient être librement choisies par les parties, à savoir les officiers ayant un grade au moins égal à celui […]"
+    },
+    {
+     "pid": "C3",
+     "title": "Cass. Soc., 2024-12-11, n° 23-10.439",
+     "case_id": "67593245db845b438efc6e0a",
+     "section": "Motivations de la Cour",
+     "text": "le ministre compétent annule, sur recours hiérarchique, la décision de l'inspecteur du travail autorisant le licenciement d'un salarié investi de l'un des mandats énumérés par ce texte, ou lorsque le juge administratif annule la décision d'autorisation de l'inspecteur du travail ou du ministre compétent, le salarié concerné a le droit, s'il le demande dans un délai de deux mois à compter de la notification de la décision, d'être réintégré dans son emploi ou dans un emploi équivalent. Cette disposition s'applique, notamment, au délégué du personnel, titulaire ou suppléant. 12. Aux termes de l'article L. 2422-4 du même code, lorsque l'annulation d'une décision d'autorisation est devenue définitive, le salarié investi d'un des mandats mentionnés à l'article L. 2422-1 a droit au paiement d'une indemnité correspondant à la totalité du préjudice subi au cours de la période écoulée entre son licenciement et sa réintégration, s'il en a formulé la demande dans le délai de deux mois à compter de la notification de […]"
+    },
+    {
+     "pid": "C4",
+     "title": "Cass. Soc., 2024-12-11, n° 23-10.439",
+     "case_id": "67593245db845b438efc6e0a",
+     "section": "Sommaire",
+     "text": "Il résulte des articles L. 2422-1 et L. 2422-4 du code du travail que seule la demande de réintégration doit être formée, à peine d'irrecevabilité, dans le délai de deux mois à compter de la notification du jugement annulant l'autorisation administrative de licenciement. La durée de la prescription étant déterminée par la nature de la créance invoquée, l'indemnité due en application de l'article L. 2422-4 du code du travail qui a, de par la loi, le caractère d'un complément de salaire, a la nature d'une créance salariale, en sorte qu'elle est soumise à la prescription triennale prévue par l'article L. 3245-1 du code du travail. L'indemnisation prévue par l'article L. 2422-4 du code du travail en cas d'annulation de l'autorisation de licenciement par jugement du tribunal administratif n'est due que lorsque l'annulation de la décision d'autorisation est devenue définitive. Il en résulte que le délai de prescription de l'action au titre de cette indemnisation ne court qu'à compter de cette […]"
+    },
+    {
+     "pid": "C5",
+     "title": "Cass. Soc., 2020-11-04, n° 19-11.865",
+     "case_id": "5fca2c3bf58f461c14b5059c",
+     "section": "Motivations de la Cour",
+     "text": "que le salarié avait, le 13 décembre 2014, informé son employeur de son élection aux fonctions d'adjoint délégué au sport de la commune de Bouguenais le 20 novembre précédent et constaté qu'en l'espèce, la rupture conventionnelle du contrat de travail du salarié avait fait l'objet d'une homologation par l'inspecteur du travail et non d'une autorisation préalable, la cour d'appel en a exactement déduit que cette rupture conventionnelle était nulle et produisait les effets d'un licenciement nul pour violation du statut protecteur du salarié. 6. Le moyen n'est donc pas fondé."
+    }
+   ],
+   "external": []
+  },
+  "warning": null,
+  "iterations": 2,
+  "metrics": {
+   "llm_calls": 4,
+   "prompt_tokens": 4477,
+   "completion_tokens": 421,
+   "llm_seconds": 67.2,
+   "calls": [
+    {
+     "purpose": "décision",
+     "latency_s": 10.81,
+     "prompt_tokens": 441,
+     "completion_tokens": 68
+    },
+    {
+     "purpose": "décision",
+     "latency_s": 18.29,
+     "prompt_tokens": 847,
+     "completion_tokens": 89
+    },
+    {
+     "purpose": "réponse",
+     "latency_s": 11.49,
+     "prompt_tokens": 1743,
+     "completion_tokens": 79
+    },
+    {
+     "purpose": "vérification",
+     "latency_s": 26.58,
+     "prompt_tokens": 1446,
+     "completion_tokens": 185
+    }
+   ],
+   "tool_calls": 1,
+   "tool_errors": 0,
+   "total_seconds": 85.2
+  }
+ },
+ "events": [
+  {
+   "step": 1,
+   "type": "START",
+   "title": "Question reçue",
+   "node": "start",
+   "t": 0.0,
+   "data": {
+    "question": "Le juge judiciaire peut-il apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail ?",
+    "options": {
+     "max_iterations": 5,
+     "use_external": true,
+     "require_approval": false,
+     "llm_check": true,
+     "use_memory": true,
+     "model": null,
+     "session_id": "scenario-s1"
+    },
+    "memory": null
+   },
+   "seq": 0
+  },
+  {
+   "step": 2,
+   "type": "NODE",
+   "title": "Agent : choix de la prochaine action",
+   "node": "agent",
+   "t": 0.01,
+   "data": {},
+   "seq": 1
+  },
+  {
+   "step": 3,
+   "type": "DECISION",
+   "title": "Rechercher dans le corpus",
+   "node": "agent",
+   "t": 11.01,
+   "data": {
+    "action": "search_cases",
+    "args": {
+     "query": "licenciement salarié protgé inspecteur du travail",
+     "k": 5
+    },
+    "reason": "Aucune preuve n'a été trouvée, il faut donc commencer par une recherche plus large",
+    "guardrail": null,
+    "raw": null
+   },
+   "seq": 2
+  },
+  {
+   "step": 4,
+   "type": "NODE",
+   "title": "Outil : search_cases",
+   "node": "tools",
+   "t": 11.01,
+   "data": {},
+   "seq": 3
+  },
+  {
+   "step": 5,
+   "type": "TOOL",
+   "title": "search_cases(query='licenciement salarié protgé inspecteur du travail', k=5)",
+   "node": "tools",
+   "t": 11.01,
+   "data": {
+    "tool": "search_cases",
+    "args": {
+     "query": "licenciement salarié protgé inspecteur du travail",
+     "k": 5
+    }
+   },
+   "seq": 4
+  },
+  {
+   "step": 6,
+   "type": "OBSERVATION",
+   "title": "5 décision(s) trouvée(s) ; meilleure : Cass. Soc., 2018-09-12, n° 16-26.853",
+   "node": "tools",
+   "t": 28.85,
+   "data": {
+    "tool": "search_cases",
+    "results": [
+     {
+      "label": "D1",
+      "title": "Cass. Soc., 2018-09-12, n° 16-26.853",
+      "solution": "Rejet",
+      "snippet": "tribunal du commerce, en ce qui concerne les capitaines ayant le commandement du navire\" ; que s'il instaure une procédure de conciliation obligatoire et préalable à une action judiciaire, ce texte n'impose pas à l'employeur de saisir l'inspecteur du travail […]"
+     },
+     {
+      "label": "D2",
+      "title": "Cass. Soc., 2024-12-11, n° 23-10.439",
+      "solution": "Cassation",
+      "snippet": "le ministre compétent annule, sur recours hiérarchique, la décision de l'inspecteur du travail autorisant le licenciement d'un salarié investi de l'un des mandats énumérés par ce texte, ou lorsque le juge administratif annule la décision d'autorisation de l'inspecteur du travail […]"
+     },
+     {
+      "label": "D3",
+      "title": "Cass. Soc., 2020-11-04, n° 19-11.865",
+      "solution": "Cassation",
+      "snippet": "que le salarié avait, le 13 décembre 2014, informé son employeur de son élection aux fonctions d'adjoint délégué au sport de la commune de Bouguenais le 20 novembre précédent et constaté qu'en l'espèce, la rupture conventionnelle du contrat de travail […]"
+     },
+     {
+      "label": "D4",
+      "title": "Cass. Soc., 2022-05-18, n° 21-10.118",
+      "solution": "Cassation",
+      "snippet": "Il résulte des articles L. 2411-1 et L. 1235-3, dans sa rédaction antérieure à l'ordonnance n°2017-1387 du 22 septembre 2017, du code du travail que le salarié protégé dont le licenciement est nul, qui ne demande pas sa réintégration ou […]"
+     },
+     {
+      "label": "D5",
+      "title": "Cass. Soc., 2017-03-23, n° 15-24.005",
+      "solution": "Rejet",
+      "snippet": "Mais attendu qu'en l'absence d'autorisation de l'inspecteur du travail, le transfert du contrat de travail d'un salarié protégé est nul et ouvre droit, en application de l'article L. 1235-3 du code du travail à une indemnité au moins égale aux […]"
+     }
+    ],
+    "new_evidence": [
+     "C1",
+     "C2",
+     "C3",
+     "C4",
+     "C5"
+    ],
+    "latency_s": 17.84
+   },
+   "seq": 5
+  },
+  {
+   "step": 7,
+   "type": "NODE",
+   "title": "Agent : choix de la prochaine action",
+   "node": "agent",
+   "t": 28.86,
+   "data": {},
+   "seq": 6
+  },
+  {
+   "step": 8,
+   "type": "DECISION",
+   "title": "Rédiger la réponse",
+   "node": "agent",
+   "t": 47.15,
+   "data": {
+    "action": "answer",
+    "args": {},
+    "reason": "Pas de décision spécifique sur le caractère réel et sérieux du licenciement d'un salarié protégé",
+    "guardrail": "des preuves existent déjà : le vérificateur jugera si elles suffisent",
+    "raw": null
+   },
+   "seq": 7
+  },
+  {
+   "step": 9,
+   "type": "NODE",
+   "title": "Rédaction de la réponse",
+   "node": "answer",
+   "t": 47.15,
+   "data": {},
+   "seq": 8
+  },
+  {
+   "step": 10,
+   "type": "GENERATION",
+   "title": "Brouillon de réponse rédigé",
+   "node": "answer",
+   "t": 58.65,
+   "data": {
+    "answer": "Non, le juge judiciaire ne peut pas apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail",
+    "citations": [
+     "C1",
+     "C2",
+     "C3",
+     "C4",
+     "C5"
+    ],
+    "found": true,
+    "evidence_given": [
+     "C1",
+     "C2",
+     "C3",
+     "C4",
+     "C5"
+    ]
+   },
+   "seq": 9
+  },
+  {
+   "step": 11,
+   "type": "NODE",
+   "title": "Vérification des preuves",
+   "node": "verify",
+   "t": 58.65,
+   "data": {},
+   "seq": 10
+  },
+  {
+   "step": 12,
+   "type": "CHECK",
+   "title": "Preuves suffisantes : oui",
+   "node": "verify",
+   "t": 85.24,
+   "data": {
+    "ok": true,
+    "checks": {
+     "preuves_presentes": true,
+     "citations_valides": true,
+     "source_corpus_citee": true,
+     "reponse_trouvee": true,
+     "pas_d_info_non_sourcee": true,
+     "notions_cles_sourcees": true,
+     "coherence_reponse_passages": true
+    },
+    "unsupported_sentences": [],
+    "judge": {
+     "supported": false,
+     "unsupported_claims": [
+      "le juge judiciaire ne peut pas apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail"
+     ],
+     "missing": "Pour justifier cette affirmation, il faudrait une référence explicite à un article ou à une disposition du code du travail qui autorise le juge judiciaire à apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail. Actuellement, le juge judiciaire ne peut que vérifier si le licenciement a été effectivement autorisé par l'inspecteur du travail, mais il ne peut pas apprécier son caractère réel et sérieux.",
+     "objections_retenues": [],
+     "objections_ecartees": [
+      "le juge judiciaire ne peut pas apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail"
+     ]
+    },
+    "feedback": null,
+    "next": "preuves suffisantes"
+   },
+   "seq": 11
+  },
+  {
+   "step": 13,
+   "type": "NODE",
+   "title": "Réponse finale",
+   "node": "final",
+   "t": 85.24,
+   "data": {},
+   "seq": 12
+  },
+  {
+   "step": 14,
+   "type": "FINAL",
+   "title": "Réponse vérifiée",
+   "node": "final",
+   "t": 85.24,
+   "data": {
+    "answer": "Non, le juge judiciaire ne peut pas apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail",
+    "status": "vérifiée",
+    "stop_reason": "réponse finale vérifiée",
+    "sources": {
+     "corpus": [
+      {
+       "pid": "C1",
+       "title": "Cass. Soc., 2018-09-12, n° 16-26.853",
+       "case_id": "5fca877490b1da78832773c7",
+       "section": "Moyens du pourvoi",
+       "text": "tribunal du commerce, en ce qui concerne les capitaines ayant le commandement du navire\" ; que s'il instaure une procédure de conciliation obligatoire et préalable à une action judiciaire, ce texte n'impose pas à l'employeur de saisir l'inspecteur du travail avant un licenciement ; qu'en considérant que la société Aremiti avait l'obligation de saisir l'inspecteur du travail avant de procéder au licenciement de M. X... et que, n'ayant pas eu recours à cette procédure de conciliation préalable, elle ne pouvait de bonne foi reprocher au salarié de n'avoir pas lui-même saisi l'Inspection du travail avant de porter ses demandes devant le tribunal du travail, cependant que la société Aremiti n'avait nullement l'obligation de saisir l'inspecteur du travail avant de procéder au licenciement de M. X..., de sorte qu'aucun manquement de sa part à la bonne foi ne se trouvait caractérisée en l'espèce, la cour d'appel a violé par refus d'application l'article 37 de la convention collective du 14 mai 1959 […]"
+      },
+      {
+       "pid": "C2",
+       "title": "Cass. Soc., 2018-09-12, n° 16-26.853",
+       "case_id": "5fca877490b1da78832773c7",
+       "section": "Sommaire",
+       "text": "Aux termes de l'article 28 de la convention collective du 14 mai 1959 applicable aux officiers des entreprises de navigation du territoire de la Polynésie française armant des navires de commerce de plus de 25 tonneaux de jauge brute au cabotage colonial, la suspension de fonction et de solde et la révocation de l'officier titularisé ne peuvent être prononcées par la direction qu'après avis d'une commission d'enquête constituée paritairement et comprenant le chef d'entreprise ou son délégué, le chef d'armement ou du service technique ou son délégué, le capitaine le plus ancien à Papeete, deux officiers ayant un grade au moins égal à celui de l'intéressé, présents à Papeete et dont l'un appartient à l'entreprise. Une cour d'appel, qui a relevé qu'alors qu'est exigée une composition paritaire de la commission d'enquête, l'employeur ne conteste pas que les deux seules personnes qui pouvaient être librement choisies par les parties, à savoir les officiers ayant un grade au moins égal à celui […]"
+      },
+      {
+       "pid": "C3",
+       "title": "Cass. Soc., 2024-12-11, n° 23-10.439",
+       "case_id": "67593245db845b438efc6e0a",
+       "section": "Motivations de la Cour",
+       "text": "le ministre compétent annule, sur recours hiérarchique, la décision de l'inspecteur du travail autorisant le licenciement d'un salarié investi de l'un des mandats énumérés par ce texte, ou lorsque le juge administratif annule la décision d'autorisation de l'inspecteur du travail ou du ministre compétent, le salarié concerné a le droit, s'il le demande dans un délai de deux mois à compter de la notification de la décision, d'être réintégré dans son emploi ou dans un emploi équivalent. Cette disposition s'applique, notamment, au délégué du personnel, titulaire ou suppléant. 12. Aux termes de l'article L. 2422-4 du même code, lorsque l'annulation d'une décision d'autorisation est devenue définitive, le salarié investi d'un des mandats mentionnés à l'article L. 2422-1 a droit au paiement d'une indemnité correspondant à la totalité du préjudice subi au cours de la période écoulée entre son licenciement et sa réintégration, s'il en a formulé la demande dans le délai de deux mois à compter de la notification de […]"
+      },
+      {
+       "pid": "C4",
+       "title": "Cass. Soc., 2024-12-11, n° 23-10.439",
+       "case_id": "67593245db845b438efc6e0a",
+       "section": "Sommaire",
+       "text": "Il résulte des articles L. 2422-1 et L. 2422-4 du code du travail que seule la demande de réintégration doit être formée, à peine d'irrecevabilité, dans le délai de deux mois à compter de la notification du jugement annulant l'autorisation administrative de licenciement. La durée de la prescription étant déterminée par la nature de la créance invoquée, l'indemnité due en application de l'article L. 2422-4 du code du travail qui a, de par la loi, le caractère d'un complément de salaire, a la nature d'une créance salariale, en sorte qu'elle est soumise à la prescription triennale prévue par l'article L. 3245-1 du code du travail. L'indemnisation prévue par l'article L. 2422-4 du code du travail en cas d'annulation de l'autorisation de licenciement par jugement du tribunal administratif n'est due que lorsque l'annulation de la décision d'autorisation est devenue définitive. Il en résulte que le délai de prescription de l'action au titre de cette indemnisation ne court qu'à compter de cette […]"
+      },
+      {
+       "pid": "C5",
+       "title": "Cass. Soc., 2020-11-04, n° 19-11.865",
+       "case_id": "5fca2c3bf58f461c14b5059c",
+       "section": "Motivations de la Cour",
+       "text": "que le salarié avait, le 13 décembre 2014, informé son employeur de son élection aux fonctions d'adjoint délégué au sport de la commune de Bouguenais le 20 novembre précédent et constaté qu'en l'espèce, la rupture conventionnelle du contrat de travail du salarié avait fait l'objet d'une homologation par l'inspecteur du travail et non d'une autorisation préalable, la cour d'appel en a exactement déduit que cette rupture conventionnelle était nulle et produisait les effets d'un licenciement nul pour violation du statut protecteur du salarié. 6. Le moyen n'est donc pas fondé."
+      }
+     ],
+     "external": []
+    },
+    "warning": null,
+    "iterations": 2,
+    "metrics": {
+     "llm_calls": 4,
+     "prompt_tokens": 4477,
+     "completion_tokens": 421,
+     "llm_seconds": 67.2,
+     "calls": [
+      {
+       "purpose": "décision",
+       "latency_s": 10.81,
+       "prompt_tokens": 441,
+       "completion_tokens": 68
+      },
+      {
+       "purpose": "décision",
+       "latency_s": 18.29,
+       "prompt_tokens": 847,
+       "completion_tokens": 89
+      },
+      {
+       "purpose": "réponse",
+       "latency_s": 11.49,
+       "prompt_tokens": 1743,
+       "completion_tokens": 79
+      },
+      {
+       "purpose": "vérification",
+       "latency_s": 26.58,
+       "prompt_tokens": 1446,
+       "completion_tokens": 185
+      }
+     ],
+     "tool_calls": 1,
+     "tool_errors": 0,
+     "total_seconds": 85.2
+    }
+   },
+   "seq": 13
+  }
+ ]
+}

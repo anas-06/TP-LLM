@@ -1,0 +1,118 @@
+{
+ "s1": {
+  "scenario": "s1",
+  "label": "RAG simple",
+  "question": "Le juge judiciaire peut-il apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail ?",
+  "agent": {
+   "status": "vérifiée",
+   "answer": "Non, le juge judiciaire ne peut pas apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail",
+   "decisions": 2,
+   "llm_calls": 4,
+   "tool_calls": 1,
+   "seconds": 85.2,
+   "tokens": 4898,
+   "path": [
+    "agent",
+    "tools",
+    "agent",
+    "answer",
+    "verify",
+    "final"
+   ],
+   "sources": [
+    "Cass. Soc., 2018-09-12, n° 16-26.853",
+    "Cass. Soc., 2024-12-11, n° 23-10.439",
+    "Cass. Soc., 2020-11-04, n° 19-11.865"
+   ]
+  },
+  "static": {
+   "answer": "Non, le juge judiciaire ne peut apprécier le caractère réel et sérieux du licenciement d'un salarié protégé autorisé par l'inspecteur du travail, car il ne s'agit pas d'un licenciement économique, mais d'un licenciement protégé qui doit être apprécié par le juge administratif ou le ministre compétent.",
+   "found": true,
+   "citations": [],
+   "llm_calls": 1,
+   "seconds": 15.1,
+   "tokens": 1768,
+   "sources": []
+  }
+ },
+ "s2": {
+  "scenario": "s2",
+  "label": "Multi-étapes",
+  "question": "Dans l'affaire n° 23-20.161 sur un bail rural, que reprochait le bailleur à l'arrêt d'appel et qu'a décidé la Cour de cassation ?",
+  "agent": {
+   "status": "vérifiée",
+   "answer": "Le bailleur reprochait à l'arrêt d'appel qu'il n'avait pas été entendu ou appelé à la procédure, ce qui violait l'article 14 du code de procédure civile. La Cour de cassation a décidé que ce moyen n'est pas fondé et a rejeté le pourvoi.",
+   "decisions": 3,
+   "llm_calls": 5,
+   "tool_calls": 2,
+   "seconds": 64.5,
+   "tokens": 3723,
+   "path": [
+    "agent",
+    "tools",
+    "agent",
+    "tools",
+    "agent",
+    "answer",
+    "verify",
+    "final"
+   ],
+   "sources": [
+    "Cass. Civ. 3e, 2025-03-13, n° 23-20.161"
+   ]
+  },
+  "static": {
+   "answer": "Le preneur à bail rural n'est tenu de mettre en cause à l'instance que ce dernier, qui a seul, par cet acte, manifesté sa volonté de rompre le bail.",
+   "found": true,
+   "citations": [],
+   "llm_calls": 1,
+   "seconds": 10.9,
+   "tokens": 1359,
+   "sources": []
+  }
+ },
+ "s3": {
+  "scenario": "s3",
+  "label": "Information insuffisante",
+  "question": "Qu'est-ce que la théorie de l'imprévision et la Cour de cassation l'a-t-elle appliquée à un contrat ?",
+  "agent": {
+   "status": "non vérifiée",
+   "answer": "La Cour de cassation a appliqué la théorie de l'imprévision au contrat de travail, mais la rupture du contrat se prescrit par douze mois Î compter de la notification de la rupture.",
+   "decisions": 5,
+   "llm_calls": 9,
+   "tool_calls": 4,
+   "seconds": 167.7,
+   "tokens": 9130,
+   "path": [
+    "agent",
+    "tools",
+    "agent",
+    "answer",
+    "verify",
+    "agent",
+    "tools",
+    "agent",
+    "tools",
+    "agent",
+    "tools",
+    "agent",
+    "answer",
+    "verify",
+    "final"
+   ],
+   "sources": [
+    "Cass. Civ. 3e, 2019-10-17, n° 18-19.611",
+    "Cass. Soc., 2023-09-27, n° 21-25.973"
+   ]
+  },
+  "static": {
+   "answer": "La Cour de cassation a appliqué la théorie de l'imprévision dans un contrat de travail, en considérant que les liens plus étroits avec un autre pays ne permettent pas dçevrer des dispositions impératives plus favorables.",
+   "found": true,
+   "citations": [],
+   "llm_calls": 1,
+   "seconds": 16.6,
+   "tokens": 1619,
+   "sources": []
+  }
+ }
+}
